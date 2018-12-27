@@ -1,21 +1,46 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-contract PermissionCtl {
+contract FX2_PermissionCtl {
+
+  enum DBSContractState {
+    /* Normal operation of all functions */
+    Healthy,
+    /* There are errors, but they still work. Some of the functions are affected. */
+    Sicking,
+    /* Serious errors, resulting in some functions can not function properly */
+    Serious,
+    /* The contract is being maintained or upgraded */
+    Upgrade,
+    /* Serious error, suspend all contract related functions, wait for maintenance or migration */
+    Error,
+    /* 合约已弃用,并且已经迁移到新到合约，本正在等待回收 */
+    Migrated
+  }
 
   struct Table
   {
     address superOwner;
     address[] admins;
     address[] managers;
+    address[] constractVisiters;
   }
 
   Table DBTable;
 
+  function GetAllVisterConstract()
+  public
+  view
+  NeedAdminPermission
+  returns ( address[] memory contracts )
+  {
+    return DBTable.constractVisiters;
+  }
+
   function GetAllPermissionAddress()
   public
-  constant
+  view
   NeedAdminPermission
-  returns (address superAdmin, address[] admins, address[] managers)
+  returns (address superAdmin, address[] memory admins, address[] memory managers)
   {
     return (DBTable.superOwner, DBTable.admins, DBTable.managers);
   }
@@ -25,6 +50,16 @@ contract PermissionCtl {
     DBTable.superOwner = msg.sender;
     DBTable.admins.push(msg.sender);
     DBTable.managers.push(msg.sender);
+  }
+
+  modifier ConstractInterfaceMethod()
+  {
+    if ( IsExistContractVisiter(msg.sender) )
+    {
+      _;
+    }
+
+    return ;
   }
 
   modifier NeedSuperPermission()
@@ -101,7 +136,7 @@ contract PermissionCtl {
 
   function GetSuperOwner()
   public
-  constant
+  view
   returns (address superOwnerAddress)
   {
     return DBTable.superOwner;
@@ -185,5 +220,39 @@ contract PermissionCtl {
     }
 
     return false;
+  }
+
+  function IsExistContractVisiter( address visiter )
+  public
+  view
+  returns (bool exist)
+  {
+    for (uint i = 0; i < DBTable.constractVisiters.length; i++ )
+    {
+      if (DBTable.constractVisiters[i] == visiter)
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function AddConstractVisiter( address visiter )
+  public
+  NeedAdminPermission
+  returns (bool success)
+  {
+    for (uint i = 0; i < DBTable.constractVisiters.length; i++ )
+    {
+      if (DBTable.constractVisiters[i] == visiter)
+      {
+        return false;
+      }
+    }
+
+    DBTable.constractVisiters.push(visiter);
+
+    return true;
   }
 }

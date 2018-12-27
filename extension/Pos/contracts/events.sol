@@ -1,10 +1,20 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-contract FX2_Externsion_Events_PosSupport 
+contract FX2_Externsion_Events_PosSupport
 {
     /*********************************************/
     /************** Pos相关事件 *******************/
     /*********************************************/
+
+    /* 系统用户增加了Posout记录时 */
+    event OnCreatePosoutRecord
+    (
+      uint256 posTotal,
+      uint256 posDecimal,
+      uint256 posEverCoinAmount,
+      uint256 posoutTime
+    );
+
     /* 当用户投入可用余额进入Pos池中 */
     event OnCreatePosRecord
     (
@@ -16,10 +26,6 @@ contract FX2_Externsion_Events_PosSupport
     (
       // 记录对应的数额
       uint256 posAmount,
-      // 记录创建的时间
-      uint256 recordCreateTime,
-      // 记录最后领取收益的时间
-      uint256 lastWithDrawTime,
       // 提取时候残留一并读取的收益
       uint256 posProfit,
       /* is send token profix to owner address. */
