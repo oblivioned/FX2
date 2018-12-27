@@ -7,7 +7,7 @@ contract FX2_ERC20TokenPlugBaseContract is FX2_ERC20Token_Interface
 {
   FX2_ERC20TokenDBS_Interface DBS_ERC20Token;
 
-  constructor( address parmasAddress ) public payable
+  constructor( FX2_ERC20TokenDBS_Interface parmasAddress ) public payable
   {
     DBS_ERC20Token = FX2_ERC20TokenDBS_Interface(parmasAddress);
   }

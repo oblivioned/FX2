@@ -1,10 +1,10 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "./FX2_PermissionCtl.sol";
+import "../FX2_PermissionInterface.sol";
 
 /// @title  ExtensionModules-Pos-DBS
 /// @author Martin.Ren
-contract FX2_BaseDBS is FX2_PermissionCtl
+contract FX2_BaseDBS is FX2_PermissionInterface
 {
   function SetUintValue(string memory key, uint value)
   public

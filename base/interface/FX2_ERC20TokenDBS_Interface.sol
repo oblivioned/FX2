@@ -24,7 +24,7 @@ contract FX2_ERC20TokenDBS_Interface is FX2_BaseDBS_Interface
   function DivestmentAmountFromCalledContract( address _owner, uint256 _divestAmount )
   public
   returns (uint256 balance);
-
+  
   function TransferBalanceFromContract(address _owner, uint256 _addAmount)
   public
   returns (uint256 balance);
