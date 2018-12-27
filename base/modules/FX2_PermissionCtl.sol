@@ -10,10 +10,10 @@ contract FX2_PermissionCtl {
     /* Serious errors, resulting in some functions can not function properly */
     Serious,
     /* The contract is being maintained or upgraded */
-    Upgrade,
+    Upgrading,
     /* Serious error, suspend all contract related functions, wait for maintenance or migration */
     Error,
-    /* 合约已弃用,并且已经迁移到新到合约，本正在等待回收 */
+    /* The contract has been discarded and moved to the new contract, which is awaiting recovery. */
     Migrated
   }
 
