@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "./FX2_PermissionCtl.sol";
+import "../internal/FX2_PermissionCtl.sol";
 
 library FX2_Config
 {

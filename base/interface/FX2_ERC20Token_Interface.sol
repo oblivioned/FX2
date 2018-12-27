@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-contract FX2_ERC20TokenInterface
+contract FX2_ERC20Token_Interface
 {
     function totalSupply() public view returns ( uint256 );
     function name() public view returns ( string memory );

@@ -1,10 +1,10 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "../implement/FX2_BaseDBS_Interface.sol";
+import "../interface/FX2_BaseDBS_Interface.sol";
 
 /// @title  BalanceDBS
 /// @author Martin.Ren
-contract FX2_ERC20TokenDBS is FX2_BaseDBS
+contract FX2_ERC20TokenDBS is FX2_BaseDBS_Interface
 {
   uint256 public totalSupply = 5000000000 * 10 ** 8;
   string  public name = "ANT(Coin)";
@@ -29,79 +29,34 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   public
   view
   BetterThanExecuted(DBSContractState.AnyTimes)
-  returns (uint256 balance)
-  {
-    return _balanceMap[owner];
-  }
+  returns (uint256 balance);
 
   function InvestmentAmountIntoCalledContract( address _owner, uint256 _investAmount )
   public
   ConstractInterfaceMethod
   BetterThanExecuted(DBSContractState.Healthy)
-  returns (uint256 balance)
-  {
-    // this msg.sender only can be a visiter contract instance and have right permission.
-    require( IsExistContractVisiter(msg.sender), "InvestmentAmountIntoMyself:msg.sender does not have access to this function." );
-    require( _owner != address(0x0) && _investAmount > 0 );
-    require( (_balanceMap[_owner] - _investAmount) + _investAmount == _balanceMap[_owner] );
-
-    _balanceMap[msg.sender] += _investAmount;
-    _balanceMap[_owner] -= _investAmount;
-    _investmentAmountMap[_owner][msg.sender] += _investAmount;
-
-    return _balanceMap[_owner];
-  }
+  returns (uint256 balance);
 
   function DivestmentAmountFromCalledContract( address _owner, uint256 _divestAmount )
   public
   ConstractInterfaceMethod
   BetterThanExecuted(DBSContractState.Healthy)
-  returns (uint256 balance)
-  {
-    require( IsExistContractVisiter(msg.sender), "DivestmentAmountFromCalledContract : msg.sender does not have access to this function." );
-    require( _owner != address(0x0) && _divestAmount > 0 );
-    require( _investmentAmountMap[_owner][msg.sender] >= _divestAmount, "DivestmentAmountFromCalledContract : The number of evacuations is insufficient." );
-
-    _investmentAmountMap[_owner][msg.sender] -= _divestAmount;
-    _balanceMap[msg.sender] -= _divestAmount;
-    _balanceMap[_owner] += _divestAmount;
-
-    return _balanceMap[_owner];
-  }
+  returns (uint256 balance);
 
   function TransferBalanceFromContract(address _owner, uint256 _addAmount)
   public
   ConstractInterfaceMethod
   BetterThanExecuted(DBSContractState.Serious)
-  returns (uint256 balance)
-  {
-    require( _owner != address(0x0) && _addAmount > 0 );
-    require( (_balanceMap[_owner] + _addAmount) - _addAmount == _balanceMap[_owner] );
-
-    _balanceMap[address(this)] -= _addAmount;
-    return _balanceMap[_owner] += _addAmount;
-  }
+  returns (uint256 balance);
 
   function GetTokenTotalBalance()
   public
   view
   BetterThanExecuted(DBSContractState.AnyTimes)
-  returns (uint256 totalBalance)
-  {
-    return _balanceMap[address(this)];
-  }
+  returns (uint256 totalBalance);
 
   function TransferBalance(address _from, address _to, uint256 _amount)
   public
   ConstractInterfaceMethod
-  BetterThanExecuted(DBSContractState.Serious)
-  {
-    require ( address(0x0) != _from && _from != _to );
-    require ( _amount > 0 && _balanceMap[_from] >= _amount );
-    require ( (_balanceMap[_from] - _amount) + _amount == _balanceMap[_from] );
-    require ( (_balanceMap[_to] + _amount) - _amount == _balanceMap[_to] );
-
-    _balanceMap[_from] -= _amount;
-    _balanceMap[_to] += _amount;
-  }
+  BetterThanExecuted(DBSContractState.Serious);
 }

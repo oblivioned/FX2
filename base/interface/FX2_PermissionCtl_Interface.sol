@@ -2,7 +2,7 @@ pragma solidity >=0.4.22 <0.6.0;
 
 import "./FX2_Examination_Interface.sol";
 
-contract FX2_PermissionCtl is FX2_Examination_Interface
+contract FX2_PermissionCtl_Interface is FX2_Examination_Interface
 {
   struct Table
   {
@@ -17,65 +17,30 @@ contract FX2_PermissionCtl is FX2_Examination_Interface
   function GetContractState()
   public
   view
-  returns ( DBSContractState state )
-  {
-    return ContractState;
-  }
+  returns ( DBSContractState state );
   
   function ChangeContractStateToUpgrading()
   public
-  NeedAdminPermission()
-  {
-    ContractState = DBSContractState.Upgrading;
-  }
+  NeedAdminPermission();
   
   /// @notice override super contract function
   function IsDoctorProgrammer(address addr) 
   internal 
   view 
-  returns (bool ret)
-  {
-    if ( addr == DBTable.superOwner )
-    {
-        return true;
-    }
-    
-    for ( uint a = 0; a < DBTable.admins.length; a++ )
-    {
-        if ( DBTable.admins[a] == addr )
-        {
-            return true;
-        }
-    }
-    
-    return false;
-  }
+  returns (bool ret);
 
   function GetAllVisterConstract()
   public
   view
   NeedAdminPermission
-  returns ( address[] memory contracts )
-  {
-    return DBTable.constractVisiters;
-  }
+  returns ( address[] memory contracts );
 
   function GetAllPermissionAddress()
   public
   view
   NeedAdminPermission
-  returns (address superAdmin, address[] memory admins, address[] memory managers)
-  {
-    return (DBTable.superOwner, DBTable.admins, DBTable.managers);
-  }
-
-  constructor() public
-  {
-    DBTable.superOwner = msg.sender;
-    DBTable.admins.push(msg.sender);
-    DBTable.managers.push(msg.sender);
-  }
-
+  returns (address superAdmin, address[] memory admins, address[] memory managers);
+  
   modifier ConstractInterfaceMethod()
   {
     if ( IsExistContractVisiter(msg.sender) || msg.sender == DBTable.superOwner )
@@ -161,122 +126,37 @@ contract FX2_PermissionCtl is FX2_Examination_Interface
   function GetSuperOwner()
   public
   view
-  returns (address superOwnerAddress)
-  {
-    return DBTable.superOwner;
-  }
+  returns (address superOwnerAddress);
 
   function AddManager(address manager)
   public
   NeedAdminPermission
-  returns (bool success)
-  {
-    for (uint i = 0; i < DBTable.managers.length; i++ )
-    {
-      if (DBTable.managers[i] == manager)
-      {
-        return false;
-      }
-    }
-
-    DBTable.managers.push(manager);
-  }
+  returns (bool success);
 
   function AddAdmin(address admin)
   public
   NeedSuperPermission
-  returns (bool success)
-  {
-    for (uint i = 0; i < DBTable.admins.length; i++ )
-    {
-      if (DBTable.admins[i] == admin)
-      {
-        return false;
-      }
-    }
-
-    DBTable.admins.push(admin);
-  }
+  returns (bool success);
 
   function RemoveManager(address manager)
   public
   NeedAdminPermission
-  returns (bool success)
-  {
-    for (uint i = 0; i < DBTable.managers.length; i++ )
-    {
-      if (DBTable.managers[i] == manager)
-      {
-        for (uint j = i; j < DBTable.managers.length - 1; j++)
-        {
-          DBTable.managers[j] = DBTable.managers[j + 1];
-        }
-
-        delete DBTable.managers[DBTable.managers.length - 1];
-        DBTable.managers.length --;
-
-        return true;
-      }
-    }
-
-    return false;
-  }
-
+  returns (bool success);
+  
+  
   function RemoveAdmin(address admin)
   public
   NeedSuperPermission
-  returns (bool success)
-  {
-    for (uint i = 0; i < DBTable.admins.length; i++ )
-    {
-      if (DBTable.admins[i] == admin)
-      {
-        for (uint j = i; j < DBTable.admins.length - 1; j++)
-        {
-          DBTable.admins[j] = DBTable.admins[j + 1];
-        }
-
-        delete DBTable.admins[DBTable.admins.length - 1];
-        DBTable.admins.length --;
-
-        return true;
-      }
-    }
-
-    return false;
-  }
+  returns (bool success);
 
   function IsExistContractVisiter( address visiter )
   public
   view
-  returns (bool exist)
-  {
-    for (uint i = 0; i < DBTable.constractVisiters.length; i++ )
-    {
-      if (DBTable.constractVisiters[i] == visiter)
-      {
-        return true;
-      }
-    }
-
-    return false;
-  }
+  returns (bool exist);
 
   function AddConstractVisiter( address visiter )
   public
   NeedAdminPermission
-  returns (bool success)
-  {
-    for (uint i = 0; i < DBTable.constractVisiters.length; i++ )
-    {
-      if (DBTable.constractVisiters[i] == visiter)
-      {
-        return false;
-      }
-    }
-
-    DBTable.constractVisiters.push(visiter);
-
-    return true;
-  }
+  returns (bool success);
+  
 }

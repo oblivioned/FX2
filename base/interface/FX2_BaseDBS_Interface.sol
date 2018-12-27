@@ -4,7 +4,7 @@ import "./FX2_PermissionCtl_Interface.sol";
 
 /// @title  ExtensionModules-Pos-DBS
 /// @author Martin.Ren
-interca FX2_BaseDBS is FX2_PermissionCtl
+contract FX2_BaseDBS_Interface is FX2_PermissionCtl_Interface
 {
   function SetUintValue(string memory key, uint value)
   public
