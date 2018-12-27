@@ -7,8 +7,7 @@ import "./FX2_PermissionCtl_Interface.sol";
 contract FX2_BaseDBS_Interface is FX2_PermissionCtl_Interface
 {
   function SetUintValue(string memory key, uint value)
-  public
-  ConstractInterfaceMethod;
+  public;
 
   function ExistUintKey(string memory key)
   public
@@ -23,8 +22,7 @@ contract FX2_BaseDBS_Interface is FX2_PermissionCtl_Interface
 
   ////////////////// Int /////////////////////
   function SetIntValue(string memory key, int value)
-  public
-  ConstractInterfaceMethod;
+  public;
 
   function ExistIntKey(string memory key)
   public
@@ -39,8 +37,7 @@ contract FX2_BaseDBS_Interface is FX2_PermissionCtl_Interface
 
   ////////////////// address /////////////////////
   function SetAddress(string memory key, address value)
-  public
-  ConstractInterfaceMethod;
+  public;
 
   function ExistAddressKey(string memory key)
   public
@@ -54,8 +51,7 @@ contract FX2_BaseDBS_Interface is FX2_PermissionCtl_Interface
 
   ////////////////// address ////////////////////
   function SetBoolValue(string memory key, bool value)
-  public
-  ConstractInterfaceMethod;
+  public;
 
   function GetBoolValue(string memory key)
   public

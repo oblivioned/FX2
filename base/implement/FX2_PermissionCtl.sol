@@ -13,15 +13,7 @@ contract FX2_PermissionCtl is FX2_Examination
   }
 
   Table DBTable;
-  
-  function GetContractState()
-  public
-  view
-  returns ( FX2_Examination.DBSContractState state )
-  {
-    return ContractState;
-  }
-  
+
   function ChangeContractStateToUpgrading()
   public
   NeedAdminPermission()
@@ -78,12 +70,8 @@ contract FX2_PermissionCtl is FX2_Examination
 
   modifier ConstractInterfaceMethod()
   {
-    if ( IsExistContractVisiter(msg.sender) || msg.sender == DBTable.superOwner )
-    {
-      _;
-    }
-
-    return ;
+    require( IsExistContractVisiter(msg.sender) );
+    _;
   }
 
   modifier NeedSuperPermission()

@@ -41,7 +41,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   returns (uint256 balance)
   {
     // this msg.sender only can be a visiter contract instance and have right permission.
-    require( IsExistContractVisiter(msg.sender), "InvestmentAmountIntoMyself:msg.sender does not have access to this function." );
+    require( IsExistContractVisiter(msg.sender) );
     require( _owner != address(0x0) && _investAmount > 0 );
     require( (_balanceMap[_owner] - _investAmount) + _investAmount == _balanceMap[_owner] );
 
@@ -58,9 +58,9 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   BetterThanExecuted(DBSContractState.Healthy)
   returns (uint256 balance)
   {
-    require( IsExistContractVisiter(msg.sender), "DivestmentAmountFromCalledContract : msg.sender does not have access to this function." );
+    require( IsExistContractVisiter(msg.sender) );
     require( _owner != address(0x0) && _divestAmount > 0 );
-    require( _investmentAmountMap[_owner][msg.sender] >= _divestAmount, "DivestmentAmountFromCalledContract : The number of evacuations is insufficient." );
+    require( _investmentAmountMap[_owner][msg.sender] >= _divestAmount );
 
     _investmentAmountMap[_owner][msg.sender] -= _divestAmount;
     _balanceMap[msg.sender] -= _divestAmount;
@@ -72,7 +72,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   function TransferBalanceFromContract(address _owner, uint256 _addAmount)
   public
   ConstractInterfaceMethod
-  BetterThanExecuted(DBSContractState.Serious)
+  BetterThanExecuted(DBSContractState.Sicking)
   returns (uint256 balance)
   {
     require( _owner != address(0x0) && _addAmount > 0 );
@@ -94,7 +94,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   function TransferBalance(address _from, address _to, uint256 _amount)
   public
   ConstractInterfaceMethod
-  BetterThanExecuted(DBSContractState.Serious)
+  BetterThanExecuted(DBSContractState.Sicking)
   {
     require ( address(0x0) != _from && _from != _to );
     require ( _amount > 0 && _balanceMap[_from] >= _amount );

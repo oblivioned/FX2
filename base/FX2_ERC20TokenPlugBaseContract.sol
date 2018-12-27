@@ -1,15 +1,15 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "./modules/interface/FX2_ERC20TokenInterface.sol";
-import "./modules/FX2_ERC20TokenDBS.sol";
+import "./interface/FX2_ERC20Token_Interface.sol";
+import "./interface/FX2_ERC20TokenDBS_Interface.sol";
 
-contract FX2_ERC20TokenPlugBaseContract is FX2_ERC20TokenInterface
+contract FX2_ERC20TokenPlugBaseContract is FX2_ERC20Token_Interface
 {
-  FX2_ERC20TokenDBS DBS_ERC20Token;
+  FX2_ERC20TokenDBS_Interface DBS_ERC20Token;
 
   constructor( address parmasAddress ) public payable
   {
-    DBS_ERC20Token = FX2_ERC20TokenDBS(parmasAddress);
+    DBS_ERC20Token = FX2_ERC20TokenDBS_Interface(parmasAddress);
   }
 
   function totalSupply() public view returns ( uint256 )

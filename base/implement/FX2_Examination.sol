@@ -13,9 +13,6 @@ contract FX2_Examination {
         /* There are errors, but they still work. Some of the functions are affected. */
         Sicking,
         
-        /* Serious errors, resulting in some functions can not function properly */
-        Serious,
-        
         /* Serious error, suspend all contract related functions, wait for maintenance or migration */
         Error,
         /***************************************************************/
@@ -32,7 +29,7 @@ contract FX2_Examination {
         AnyTimes
     }
     
-    DBSContractState ContractState;
+    DBSContractState public ContractState;
     
     event OnExaminationStateChanged(
         uint256 blockNumber,
