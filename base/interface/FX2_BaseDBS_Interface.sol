@@ -8,96 +8,57 @@ contract FX2_BaseDBS_Interface is FX2_PermissionCtl_Interface
 {
   function SetUintValue(string memory key, uint value)
   public
-  ConstractInterfaceMethod
-  {
-    _uintHashMap[key] = value;
-  }
+  ConstractInterfaceMethod;
 
   function ExistUintKey(string memory key)
   public
   view
-  returns (bool isExist)
-  {
-    isExist = (_uintHashMap[key] == 0);
-  }
+  returns (bool isExist);
 
   function GetUintValue(string memory key)
   public
   view
-  returns (uint value)
-  {
-    value = _uintHashMap[key];
-  }
+  returns (uint value);
 
 
   ////////////////// Int /////////////////////
   function SetIntValue(string memory key, int value)
   public
-  ConstractInterfaceMethod
-  {
-    _intHashMap[key] = value;
-  }
+  ConstractInterfaceMethod;
 
   function ExistIntKey(string memory key)
   public
   view
-  returns (bool isExist)
-  {
-    isExist = (_intHashMap[key] == 0);
-  }
+  returns (bool isExist);
 
   function GetIntValue(string memory key)
   public
   view
-  returns (int value)
-  {
-    value = _intHashMap[key];
-  }
+  returns (int value);
 
 
   ////////////////// address /////////////////////
   function SetAddress(string memory key, address value)
   public
-  ConstractInterfaceMethod
-  {
-    _addressHashMap[key] = value;
-  }
+  ConstractInterfaceMethod;
 
   function ExistAddressKey(string memory key)
   public
   view
-  returns (bool isExist)
-  {
-    isExist = (_addressHashMap[key] == address(0x0));
-  }
+  returns (bool isExist);
 
   function GetAddress(string memory key)
   public
   view
-  returns (address value)
-  {
-    value = _addressHashMap[key];
-  }
+  returns (address value);
 
   ////////////////// address ////////////////////
   function SetBoolValue(string memory key, bool value)
   public
-  ConstractInterfaceMethod
-  {
-    _boolHashMap[key] = value;
-  }
+  ConstractInterfaceMethod;
 
   function GetBoolValue(string memory key)
   public
   view
-  returns (bool value)
-  {
-    value = _boolHashMap[key];
-  }
-
-  mapping (string => uint) _uintHashMap;
-  mapping (string => int)  _intHashMap;
-  mapping (string => address) _addressHashMap;
-  mapping (string => bool) _boolHashMap;
-
+  returns (bool value);
 }
