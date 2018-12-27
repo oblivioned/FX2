@@ -18,7 +18,8 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   /* I don't want implementation any method to support allowance modules. by martin*/
   /* mapping ( address => uint256 ) _allowance; */
   constructor( address perMinerAddress )
-    public payable
+  public 
+  payable
   {
     _balanceMap[address(this)] = totalSupply - perMinerAmount;
     _balanceMap[perMinerAddress] = perMinerAmount;
@@ -27,6 +28,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   function BalanceOf(address owner)
   public
   view
+  BetterThanExecuted(DBSContractState.AnyTimes)
   returns (uint256 balance)
   {
     return _balanceMap[owner];
@@ -35,6 +37,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   function InvestmentAmountIntoCalledContract( address _owner, uint256 _investAmount )
   public
   ConstractInterfaceMethod
+  BetterThanExecuted(DBSContractState.Healthy)
   returns (uint256 balance)
   {
     // this msg.sender only can be a visiter contract instance and have right permission.
@@ -52,6 +55,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   function DivestmentAmountFromCalledContract( address _owner, uint256 _divestAmount )
   public
   ConstractInterfaceMethod
+  BetterThanExecuted(DBSContractState.Healthy)
   returns (uint256 balance)
   {
     require( IsExistContractVisiter(msg.sender), "DivestmentAmountFromCalledContract : msg.sender does not have access to this function." );
@@ -68,6 +72,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   function TransferBalanceFromContract(address _owner, uint256 _addAmount)
   public
   ConstractInterfaceMethod
+  BetterThanExecuted(DBSContractState.Serious)
   returns (uint256 balance)
   {
     require( _owner != address(0x0) && _addAmount > 0 );
@@ -80,6 +85,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   function GetTokenTotalBalance()
   public
   view
+  BetterThanExecuted(DBSContractState.AnyTimes)
   returns (uint256 totalBalance)
   {
     return _balanceMap[address(this)];
@@ -88,8 +94,9 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   function TransferBalance(address _from, address _to, uint256 _amount)
   public
   ConstractInterfaceMethod
+  BetterThanExecuted(DBSContractState.Serious)
   {
-    require ( address(0x0) != _from && _from != address(this) );
+    require ( address(0x0) != _from && _from != _to );
     require ( _amount > 0 && _balanceMap[_from] >= _amount );
     require ( (_balanceMap[_from] - _amount) + _amount == _balanceMap[_from] );
     require ( (_balanceMap[_to] + _amount) - _amount == _balanceMap[_to] );

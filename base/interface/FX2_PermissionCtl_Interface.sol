@@ -1,22 +1,9 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-contract FX2_PermissionCtl {
+import "./FX2_Examination_Interface.sol";
 
-  enum DBSContractState {
-    /* Normal operation of all functions */
-    Healthy,
-    /* There are errors, but they still work. Some of the functions are affected. */
-    Sicking,
-    /* Serious errors, resulting in some functions can not function properly */
-    Serious,
-    /* The contract is being maintained or upgraded */
-    Upgrading,
-    /* Serious error, suspend all contract related functions, wait for maintenance or migration */
-    Error,
-    /* The contract has been discarded and moved to the new contract, which is awaiting recovery. */
-    Migrated
-  }
-
+contract FX2_PermissionCtl is FX2_Examination_Interface
+{
   struct Table
   {
     address superOwner;
@@ -26,6 +13,43 @@ contract FX2_PermissionCtl {
   }
 
   Table DBTable;
+  
+  function GetContractState()
+  public
+  view
+  returns ( DBSContractState state )
+  {
+    return ContractState;
+  }
+  
+  function ChangeContractStateToUpgrading()
+  public
+  NeedAdminPermission()
+  {
+    ContractState = DBSContractState.Upgrading;
+  }
+  
+  /// @notice override super contract function
+  function IsDoctorProgrammer(address addr) 
+  internal 
+  view 
+  returns (bool ret)
+  {
+    if ( addr == DBTable.superOwner )
+    {
+        return true;
+    }
+    
+    for ( uint a = 0; a < DBTable.admins.length; a++ )
+    {
+        if ( DBTable.admins[a] == addr )
+        {
+            return true;
+        }
+    }
+    
+    return false;
+  }
 
   function GetAllVisterConstract()
   public
@@ -54,7 +78,7 @@ contract FX2_PermissionCtl {
 
   modifier ConstractInterfaceMethod()
   {
-    if ( IsExistContractVisiter(msg.sender) )
+    if ( IsExistContractVisiter(msg.sender) || msg.sender == DBTable.superOwner )
     {
       _;
     }
@@ -144,7 +168,7 @@ contract FX2_PermissionCtl {
 
   function AddManager(address manager)
   public
-  NeedSuperPermission
+  NeedAdminPermission
   returns (bool success)
   {
     for (uint i = 0; i < DBTable.managers.length; i++ )
@@ -176,7 +200,7 @@ contract FX2_PermissionCtl {
 
   function RemoveManager(address manager)
   public
-  NeedSuperPermission
+  NeedAdminPermission
   returns (bool success)
   {
     for (uint i = 0; i < DBTable.managers.length; i++ )

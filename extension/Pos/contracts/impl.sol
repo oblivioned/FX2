@@ -130,14 +130,14 @@ FX2_Externsion_Events_PosSupport
 
       if ( DBS_Pos.GetBoolValue("WithDrawPosProfitEnable") )
       {
-        fx2_mapping_balances[msg.sender] += posProfit;
-        fx2_mapping_balances[address(this)] -= posProfit;
+        if (  DBS_Pos.TransferBalanceFromContract(msg.sender, posProfit) )
+        {
+            emit FX2_Externsion_Events_PosSupport.OnRescissionPosRecord(
+                amount,
+                posProfit,
+                DBS_Pos.GetBoolValue("WithDrawPosProfitEnable"));
+        }
       }
-
-      emit FX2_Externsion_Events_PosSupport.OnRescissionPosRecord(
-        amount,
-        posProfit,
-        DBS_Pos.GetBoolValue("WithDrawPosProfitEnable"));
     }
   }
 

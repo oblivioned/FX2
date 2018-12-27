@@ -7,16 +7,9 @@ contract FX2_ERC20TokenPlugBaseContract is FX2_ERC20TokenInterface
 {
   FX2_ERC20TokenDBS DBS_ERC20Token;
 
-  constructor( string memory deployMode, address parmasAddress ) public payable
+  constructor( address parmasAddress ) public payable
   {
-    if ( keccak256(bytes(deployMode)) == keccak256("Migrate") )
-    {
-      DBS_ERC20Token = FX2_ERC20TokenDBS(parmasAddress);
-    }
-    else if ( keccak256(bytes(deployMode)) == keccak256("Deploy") )
-    {
-      DBS_ERC20Token = new FX2_ERC20TokenDBS(parmasAddress);
-    }
+    DBS_ERC20Token = FX2_ERC20TokenDBS(parmasAddress);
   }
 
   function totalSupply() public view returns ( uint256 )
