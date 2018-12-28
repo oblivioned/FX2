@@ -18,7 +18,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   /* I don't want implementation any method to support allowance modules. by martin*/
   /* mapping ( address => uint256 ) _allowance; */
   constructor( address perMinerAddress )
-  public 
+  public
   payable
   {
     _balanceMap[address(this)] = totalSupply - perMinerAmount;

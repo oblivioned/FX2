@@ -35,8 +35,7 @@ contract FX2_PermissionCtl
     {
       if ( PermissionUsers.admins[i] == _sender )
       {
-        exist = true;
-        return;
+        return true;
       }
     }
   }
