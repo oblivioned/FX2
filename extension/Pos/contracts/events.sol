@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-contract FX2_Externsion_Events_PosSupport
+interface FX2_Externsion_Events_PosSupport
 {
     /*********************************************/
     /************** Pos相关事件 *******************/

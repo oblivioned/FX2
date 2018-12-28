@@ -11,25 +11,17 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS, FX2_Externsion_Events_Pos
     /// @notice Copy some variables that are not allowed to be modified
     ///         copy to TokenDBS data.
     uint8 decimals;
-    FX2_ERC20Token_Interface tokenContractAddress;
     
     constructor( FX2_ERC20Token_Interface erc20TokenAddress ) public payable
     {
-        // init readonly variables.
-        tokenContractAddress = erc20TokenAddress;
+        decimals = erc20TokenAddress.decimals();
         
-        SetUintValue("EverDayPosTokenAmount", 900000);
-        SetUintValue("MaxRemeberPosRecord", 30);
-        SetUintValue("JoinPosMinAmount", 10000000000);
-        SetBoolValue("WithDrawPosProfitEnable", false);
+        _uintHashMap["EverDayPosTokenAmount"] = 900000;
+        _uintHashMap["MaxRemeberPosRecord"] = 30;
+        _uintHashMap["JoinPosMinAmount"] = 10000000000;
+        _boolHashMap["WithDrawPosProfitEnable"] = false;
     }
-    
-    function InitDBS() public 
-    {
-        require (decimals == 0);
-        decimals = tokenContractAddress.decimals();
-    }
-
+   
     /// @notice add instance of pos record into the database object;
     /// @param  _owner : new record owner address.
     /// @param  _amount : Amount sum of number by min decimal. lg. '10 * 10 ** 8' or '10 * 10 ** decimal'.

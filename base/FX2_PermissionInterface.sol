@@ -174,6 +174,11 @@ contract FX2_PermissionInterface
         ContractState = state;
     }
 
+    function ConstractVisiters() public view returns (address[] memory ret)
+    {
+      return constractVisiters;
+    }
+    
     /// @notice add pass access contract visiter by this dbs contract.
     function AddConstractVisiter( address visiter )
     public

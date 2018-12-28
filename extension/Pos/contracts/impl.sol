@@ -9,16 +9,16 @@ contract FX2_Externsion_IMPL_PosSupport is
 FX2_Externsion_Events_PosSupport,
 FX2_Investable_Delegate
 {
-  constructor( 
-      FX2_Externsion_DBS_PosSupport_Interface _dbsContractAddress, 
-      FX2_ERC20TokenDBS_Interface tokenDBSAddress 
-      ) 
-      public 
+  constructor(
+      FX2_Externsion_DBS_PosSupport_Interface _dbsContractAddress,
+      FX2_ERC20TokenDBS_Interface tokenDBSAddress
+      )
+      public
       payable
   {
     DBS_Pos = FX2_Externsion_DBS_PosSupport_Interface(_dbsContractAddress);
     DBS_Token = FX2_ERC20TokenDBS_Interface(tokenDBSAddress);
-    
+
     readOnlyTokenDecimals = uint8(DBS_Token.decimals());
   }
 
@@ -28,7 +28,7 @@ FX2_Investable_Delegate
     require( DBS_Token.BalanceOf(msg.sender) >= amount && amount >= DBS_Pos.GetUintValue("JoinPosMinAmount") );
 
     DBS_Token.InvestmentAmountTo(msg.sender, amount);
-    
+
     if ( success = DBS_Pos.AddPosRecord(msg.sender, amount)  )
     {
         emit FX2_Externsion_Events_PosSupport.OnCreatePosRecord(amount);
@@ -134,7 +134,7 @@ FX2_Investable_Delegate
       if ( DBS_Pos.GetBoolValue("WithDrawPosProfitEnable") )
       {
         DBS_Token.TransferBalanceFromContract(msg.sender, posProfit);
-        
+
         emit FX2_Externsion_Events_PosSupport.OnRescissionPosRecord(
                 amount,
                 posProfit,
@@ -275,18 +275,24 @@ FX2_Investable_Delegate
         );
     }
   }
-  
+
   /// @notice Private code
   // implement delegate if not, can't use any abount Investment function.
   function InvestIdentifier() external view returns (string memory identifier)
   {
     return "FX2.Externsion.PosInvest";
-  }  
+  }
+
+  ///
+  function StatusDesc() external view returns (string memory desc)
+  {
+    return "Some desc for this invest..";
+  }
 
   FX2_Externsion_DBS_PosSupport_Interface   DBS_Pos;
 
   FX2_ERC20TokenDBS_Interface               DBS_Token;
-  
+
   // token dbs seted decimals.
   uint256 readOnlyTokenDecimals;
 }
