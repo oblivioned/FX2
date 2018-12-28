@@ -3,7 +3,7 @@ pragma solidity >=0.4.22 <0.6.0;
 import "./interface/FX2_ERC20Token_Interface.sol";
 import "./interface/FX2_ERC20TokenDBS_Interface.sol";
 
-contract FX2_ERC20TokenPlugBaseContract is FX2_ERC20Token_Interface
+contract FX2_ExpansibilityToken is FX2_ERC20Token_Interface
 {
   FX2_ERC20TokenDBS_Interface DBS_ERC20Token;
 

@@ -33,14 +33,6 @@ contract FX2_PermissionInterface
 
     DBSContractState public ContractState;
 
-    /// @notice Set up the address of the power management contract, only once
-    function SetCTLContractAddress( address ctlAddress ) public
-    {
-        require( address(CTLInterface) == address(0x0), "Address has been set and cannot be set again");
-
-        CTLInterface = FX2_PermissionCtl_Interface(ctlAddress);
-    }
-
     /// @notice When the contract status changes
     event OnExaminationStateChanged(
         uint256 blockNumber,

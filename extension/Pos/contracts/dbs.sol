@@ -1,21 +1,30 @@
 pragma solidity >=0.4.22 <0.6.0;
 
 import "../../../base/implement/FX2_BaseDBS.sol";
-import "../../../base/interface/FX2_ERC20Token_Interface.sol";
 import "./events.sol";
 
 /// @title  ExtensionModules-Pos-DBS
 /// @author Martin.Ren
+
+interface ERC20DecimalsInterface
+{
+    function decimals() external view returns (uint8);
+}
+
 contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS, FX2_Externsion_Events_PosSupport
 {
     /// @notice Copy some variables that are not allowed to be modified
     ///         copy to TokenDBS data.
     uint8 decimals;
 
-    constructor( FX2_ERC20Token_Interface erc20TokenAddress ) public payable
+    constructor( 
+        address erc20TokenAddress,
+        address permissionCTL
+        ) public payable
     {
-        decimals = erc20TokenAddress.decimals();
-
+        decimals = ERC20DecimalsInterface(erc20TokenAddress).decimals();
+        CTLInterface = FX2_PermissionCtl_Interface(permissionCTL);
+        
         _uintHashMap["EverDayPosTokenAmount"] = 900000;
         _uintHashMap["MaxRemeberPosRecord"] = 30;
         _uintHashMap["JoinPosMinAmount"] = 10000000000;
@@ -369,4 +378,6 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS, FX2_Externsion_Events_Pos
     }
 
     DB _db;
+    
+    string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'DBS','Externsion':'Pos'}";
 }

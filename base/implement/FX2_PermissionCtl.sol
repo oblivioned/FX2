@@ -200,5 +200,5 @@ contract FX2_PermissionCtl
     return false;
   }
 
-
+  string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'FX2_PermissionCtl'}";
 }

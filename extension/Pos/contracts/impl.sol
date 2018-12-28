@@ -10,14 +10,14 @@ FX2_Externsion_Events_PosSupport,
 FX2_Investable_Delegate
 {
   constructor(
-      FX2_Externsion_DBS_PosSupport_Interface _dbsContractAddress,
-      FX2_ERC20TokenDBS_Interface tokenDBSAddress
+      address posSupportDBS,
+      address tokenAddressDBS
       )
       public
       payable
   {
-    DBS_Pos = FX2_Externsion_DBS_PosSupport_Interface(_dbsContractAddress);
-    DBS_Token = FX2_ERC20TokenDBS_Interface(tokenDBSAddress);
+    DBS_Pos = FX2_Externsion_DBS_PosSupport_Interface(posSupportDBS);
+    DBS_Token = FX2_ERC20TokenDBS_Interface(tokenAddressDBS);
 
     readOnlyTokenDecimals = uint8(DBS_Token.decimals());
   }
@@ -297,4 +297,6 @@ FX2_Investable_Delegate
 
   // token dbs seted decimals.
   uint256 readOnlyTokenDecimals;
+  
+  string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'IMPL','Externsion':'Pos'}";
 }

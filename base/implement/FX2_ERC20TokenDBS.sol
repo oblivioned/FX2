@@ -18,12 +18,14 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
 
   /* I don't want implementation any method to support allowance modules. by martin*/
   /* mapping ( address => uint256 ) _allowance; */
-  constructor( address perMinerAddress )
+  constructor( address perMinerAddress, address permissionCTL )
   public
   payable
   {
     _balanceMap[address(this)] = totalSupply - perMinerAmount;
     _balanceMap[perMinerAddress] = perMinerAmount;
+    
+    CTLInterface = FX2_PermissionCtl_Interface(permissionCTL);
   }
 
   function BalanceOf(address owner)
@@ -110,4 +112,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
     _balanceMap[_from] -= _amount;
     _balanceMap[_to] += _amount;
   }
+  
+  /////////////////// FX2Framework infomation //////////////////
+  string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'FX2_ERC20TokenDBS'}";
 }
