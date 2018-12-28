@@ -166,7 +166,7 @@ contract FX2_PermissionCtl
           PermissionUsers.managers[j] = PermissionUsers.managers[j + 1];
         }
 
-        delete PermissionUsers.managers[PermissionUsers.managers.length - 1];
+        delete PermissionUsers.managers[ PermissionUsers.managers.length - 1 ];
         PermissionUsers.managers.length --;
 
         return true;
@@ -190,7 +190,7 @@ contract FX2_PermissionCtl
           PermissionUsers.admins[j] = PermissionUsers.admins[j + 1];
         }
 
-        delete PermissionUsers.admins[PermissionUsers.admins.length - 1];
+        delete PermissionUsers.admins[ PermissionUsers.admins.length - 1 ];
         PermissionUsers.admins.length --;
 
         return true;

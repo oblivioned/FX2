@@ -34,7 +34,7 @@ contract FX2_PermissionInterface
     DBSContractState public ContractState;
 
     /// @notice Set up the address of the power management contract, only once
-    function SetCTLContractAddress( FX2_PermissionCtl_Interface ctlAddress ) public
+    function SetCTLContractAddress( address ctlAddress ) public
     {
         require( address(CTLInterface) == address(0x0), "Address has been set and cannot be set again");
 
@@ -178,7 +178,7 @@ contract FX2_PermissionInterface
     {
       return constractVisiters;
     }
-    
+
     /// @notice add pass access contract visiter by this dbs contract.
     function AddConstractVisiter( address visiter )
     public
@@ -207,17 +207,19 @@ contract FX2_PermissionInterface
       {
           if ( constractVisiters[i] == visiter )
           {
-              for (uint j = 0; j < constractVisiters.length - 1; j++ )
+              for (uint j = i; j < constractVisiters.length - 1; j++ )
               {
                 constractVisiters[j] = constractVisiters[j + 1];
               }
 
-              delete constractVisiters[constractVisiters.length --];
+              delete constractVisiters[ constractVisiters.length - 1 ];
+              constractVisiters.length --;
+
               return true;
           }
-
-          return false;
       }
+
+      return false;
     }
 
     /// Some private variable.

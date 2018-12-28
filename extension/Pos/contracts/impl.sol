@@ -41,11 +41,13 @@ FX2_Investable_Delegate
   view
   returns (uint256 profit, uint256 amount, uint256 lastPosoutTime)
   {
+    FX2_Externsion_DBS_PosSupport_Interface.PosRecord memory pRecord;
+
     // 获取 Pos记录
     (
-      uint256 recordAmount,
-      uint256 recordDepositTime,
-      uint256 recordLastWithDrawTime
+      pRecord.amount,
+      pRecord.depositTime,
+      pRecord.lastWithDrawTime
     ) = DBS_Pos.GetPosRecord(_owner, recordId);
 
     // 获取 Posout列表
@@ -57,26 +59,26 @@ FX2_Investable_Delegate
       uint256[] memory posoutTimes
     ) = DBS_Pos.GetPosoutRecordList();
 
-    amount = recordAmount;
+    amount = pRecord.amount;
 
     for ( uint ri = len; ri > 0; ri-- )
     {
       uint i = ri - 1;
 
       // 首次可以提取的时间，为投入时间 + 1 日即 24小时后的当天可以计算收益
-      uint256 fristWithdrawTime = recordDepositTime + 1 days;
+      uint256 fristWithdrawTime = pRecord.depositTime + 1 days;
 
-      if ( ( recordLastWithDrawTime > fristWithdrawTime ? recordLastWithDrawTime : fristWithdrawTime  )  < posoutTimes[i] )
+      if ( ( pRecord.lastWithDrawTime > fristWithdrawTime ? pRecord.lastWithDrawTime : fristWithdrawTime  )  < posoutTimes[i] )
       {
         // 未领取，增加收益
-        uint256 subProfit = (recordAmount / (10 ** readOnlyTokenDecimals)) * posEverCoinAmounts[i];
+        uint256 subProfit = (pRecord.amount / (10 ** readOnlyTokenDecimals)) * posEverCoinAmounts[i];
 
         subProfit /= 10 ** (posDecimals[i] - readOnlyTokenDecimals);
 
         // 如果收益大于 0.003% 则强行计算为 0.003%收益
-        if ( subProfit > recordAmount * 3 / 1000 )
+        if ( subProfit > pRecord.amount * 3 / 1000 )
         {
-          subProfit = recordAmount * 3 / 1000;
+          subProfit = pRecord.amount * 3 / 1000;
         }
 
         if ( posoutTimes[i] > lastPosoutTime )

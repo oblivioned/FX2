@@ -11,17 +11,17 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS, FX2_Externsion_Events_Pos
     /// @notice Copy some variables that are not allowed to be modified
     ///         copy to TokenDBS data.
     uint8 decimals;
-    
+
     constructor( FX2_ERC20Token_Interface erc20TokenAddress ) public payable
     {
         decimals = erc20TokenAddress.decimals();
-        
+
         _uintHashMap["EverDayPosTokenAmount"] = 900000;
         _uintHashMap["MaxRemeberPosRecord"] = 30;
         _uintHashMap["JoinPosMinAmount"] = 10000000000;
         _boolHashMap["WithDrawPosProfitEnable"] = false;
     }
-   
+
     /// @notice add instance of pos record into the database object;
     /// @param  _owner : new record owner address.
     /// @param  _amount : Amount sum of number by min decimal. lg. '10 * 10 ** 8' or '10 * 10 ** decimal'.
@@ -87,8 +87,8 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS, FX2_Externsion_Events_Pos
             list[i] = list[i + 1];
         }
 
-        delete list[list.length --];
-
+        delete list[ list.length - 1 ];
+        list.length --;
         _db.posAmountTotalSum -= record.amount;
 
         return true;
@@ -186,7 +186,9 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS, FX2_Externsion_Events_Pos
           _db.dbs_out[i] = _db.dbs_out[i + 1];
         }
 
-        delete _db.dbs_out[_db.dbs_out.length --];
+        delete _db.dbs_out[ _db.dbs_out.length - 1 ];
+        _db.dbs_out.length --;
+
       }
 
       PosoutRecord memory _record = CreateNewPosoutRecord( _posTotal, _posDecimal, _posEverCoinAmount, _posoutTime );
