@@ -1,46 +1,103 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "./dbs.sol";
+import "../../../base/interface/FX2_BaseDBS_Interface.sol";
 
-interface FX2_Externsion_Interface_PosSupport
+contract FX2_Externsion_DBS_PosSupport_Interface is FX2_BaseDBS_Interface
 {
-  // 将可用余额参与POS
-  function DespoitToPos(uint256 amount) external
-  returns (bool success);
+    /// @notice add instance of pos record into the database object;
+    /// @param  _owner : new record owner address.
+    /// @param  _amount : Amount sum of number by min decimal. lg. '10 * 10 ** 8' or '10 * 10 ** decimal'.
+    function AddPosRecord( address _owner, uint256 _amount )
+    external
+    returns (bool success);
 
-  // 获取所有Pos记录
-  function GetPosRecordLists() external view
-  returns (
-    uint len,
-    uint256[] memory amounts,
-    uint256[] memory depositTimes,
-    uint256[] memory lastWithDrawTimes,
-    uint256[] memory profixs
-    );
+    function UpdataPosRecordLastWithDrawTime( address _owner, uint _rIndex, uint256 newValue )
+    external
+    returns (bool success);
 
-  // 提取参与Pos的余额与收益，解除合约
-  function RescissionPosAt(uint posRecordIndex) external
-  returns (
-    uint256 posProfit,
-    uint256 amount
-    );
+    /// @notice Get a pos record by record index.
+    /// @param  _owner : target owner address.
+    /// @param  _rIndex : record index.
+    function GetPosRecord( address _owner, uint _rIndex )
+    external
+    view
+    returns ( uint256 _amount, uint256 _depositTime, uint256 _lastWithDrawTime );
 
-  // 一次性提取所有Pos参与记录的本金和收益
-  function RescissionPosAll() external
-  returns (
-    uint256 amountTotalSum,
-    uint256 profitTotalSum
-    );
 
-  // 获取当前参与Pos的数额总量
-  function GetCurrentPosSum() external view
-  returns (
-    uint256 sum
-    );
+    /// @notice Remove a exist pos record by target owner address.
+    /// @param  _owner : target owner address.
+    /// @param  _rIndex : exist pos record index in db.
+    function RemovePosRecord( address _owner, uint _rIndex )
+    external
+    returns (bool success);
 
-  // 获取当前所有Posout记录
-  function GetPosoutLists() external view
-  returns (
+    /// @notice Get all pos recoreds with owner address.
+    /// @param  _owner : target owner address.
+    function GetPosRecordList( address _owner )
+    external
+    view
+    returns (
+      uint  len,
+      uint256[] memory _amounts,
+      uint256[] memory _depositTimes,
+      uint256[] memory _lastWithDrawTimes
+      );
+
+    function GetPosPoolTotalAmount()
+    external
+    view
+    returns (uint256 totalSum);
+
+    /// @notice Get a target owner address deposit pos pool total amount.
+    /// @param  _owner : target owner address.
+    function GetPosTotalAmount( address _owner )
+    external
+    view
+    returns (uint256 posTotal);
+
+    /// @notice Modifier posout record save max sizes,but can only add size.
+    function SetPosoutRecordMaxSize (uint16 _maxSize)
+    external;
+
+    /// @notice Get max record size by posout record in this contract,
+    ///         because of the limitation on the total number of records,
+    ///         the revenue will disappear if the maximum interval is exceeded.
+    ///         You can also adjust the "posOutRecordMaxSize" parameter to save
+    ///         more records.
+    function GetPosOutRecordMaxSize()
+    external
+    view
+    returns (uint16 size);
+
+
+    /// @notice Push a new posout record, if the size greater than "posOutRecordMaxSize",
+    ///         pop the frist record and push this new record.
+    function PushPosoutRecord(
+      uint256 _posTotal,
+      uint256 _posDecimal,
+      uint256 _posEverCoinAmount,
+      uint256 _posoutTime
+      )
+    external
+    returns (bool success);
+    
+    /// @notice Get a posout record detail info by index.
+    function GetPosoutRecord(uint _rindex)
+    external
+    view
+    returns ( 
+        uint256 posTotal, 
+        uint256 posDecimal, 
+        uint256 posEverCoinAmount, 
+        uint256 posoutTime 
+        );
+    
+
+    /// @notice Get all posout record detail list.
+    function GetPosoutRecordList()
+    external
+    view
+    returns (
       uint  len,
       uint256[] memory posTotals,
       uint256[] memory posDecimals,
@@ -48,47 +105,48 @@ interface FX2_Externsion_Interface_PosSupport
       uint256[] memory posoutTimes
       );
 
-  function GetPosoutRecordCount() external view
-  returns (uint count);
+    // 设定日产出最大值，理论上每年仅调用一次，用于控制逐年递减
+    function API_SetEverDayPosMaxAmount(uint256 maxAmount)
+    external;
 
-  // 提取指定Pos记录的收益
-  function WithDrawPosProfit(uint posRecordIndex) external
-  returns (
-    uint256 profit,
-    uint256 posAmount
-    );
+    // 增加一个Pos收益记录，理论上每日应该调用一次, time 为时间戳，而实际上是当前block的时间戳
+    // 如果time设定为0，则回使用当前block的时间戳
+    function API_CreatePosOutRecord()
+    external
+    returns (bool success);
 
-  // 提取所有Pos记录产生的收益
-  function WithDrawPosAllProfit() external
-  returns (
-    uint256 profitSum,
-    uint256 posAmountSum
-    );
+    function API_SetEnableWithDrawPosProfit(bool enable)
+    external;
 
-
-  // 设定日产出最大值，理论上每年仅调用一次，用于控制逐年递减
-  function API_SetEverDayPosMaxAmount(uint256 maxAmount)
-  external;
-
-  // 增加一个Pos收益记录，理论上每日应该调用一次, time 为时间戳，而实际上是当前block的时间戳
-  // 如果time设定为0，则回使用当前block的时间戳
-  function API_CreatePosOutRecord()
-  external
-  returns (bool success);
+    function API_GetEnableWithDrawPosProfit()
+    external
+    view
+    returns (bool enable);
 
 
-  // Extern contract interface
-  function API_ContractBalanceSendTo(address _to, uint256 _value)
-  external;
+    struct PosRecord
+    {
+        uint256 amount;
+        uint256 depositTime;
+        uint256 lastWithDrawTime;
+    }
 
-  // 防止用户转入以太坊到合约，提供函数，提取合约下所有以太坊到Owner地址
-  function API_WithDarwETH(uint256 value)
-  external;
+    struct PosoutRecord
+    {
+      uint256 posTotal;
+      uint256 posDecimal;
+      uint256 posEverCoinAmount;
+      uint256 posoutTime;
+    }
 
-  function API_SetEnableWithDrawPosProfit(bool enable)
-  external;
+    struct DB
+    {
+        mapping (address => PosRecord[]) dbs_pos;
 
-  function API_GetEnableWithDrawPosProfit()
-  external view
-  returns (bool enable);
+        PosoutRecord[] dbs_out;
+
+        // 参与Pos的总数量
+        uint256 posAmountTotalSum;
+        uint16  posOutRecordMaxSize;
+    }
 }

@@ -1,17 +1,33 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "../../../base/modules/FX2_BaseDBS.sol";
+import "../../../base/implement/FX2_BaseDBS.sol";
+import "../../../base/interface/FX2_ERC20Token_Interface.sol";
+import "./events.sol";
 
 /// @title  ExtensionModules-Pos-DBS
 /// @author Martin.Ren
-contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS
+contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS, FX2_Externsion_Events_PosSupport
 {
-    constructor() public payable
+    /// @notice Copy some variables that are not allowed to be modified
+    ///         copy to TokenDBS data.
+    uint8 decimals;
+    FX2_ERC20Token_Interface tokenContractAddress;
+    
+    constructor( FX2_ERC20Token_Interface erc20TokenAddress ) public payable
     {
+        // init readonly variables.
+        tokenContractAddress = erc20TokenAddress;
+        
         SetUintValue("EverDayPosTokenAmount", 900000);
         SetUintValue("MaxRemeberPosRecord", 30);
         SetUintValue("JoinPosMinAmount", 10000000000);
         SetBoolValue("WithDrawPosProfitEnable", false);
+    }
+    
+    function InitDBS() public 
+    {
+        require (decimals == 0);
+        decimals = tokenContractAddress.decimals();
     }
 
     /// @notice add instance of pos record into the database object;
@@ -42,34 +58,6 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS
 
       return false;
     }
-
-
-    /// @notice Get all pos recoreds with owner address.
-    /// @param  _owner : target owner address.
-    function GetPosRecordList( address _owner )
-    public
-    view
-    returns (
-      uint  len,
-      uint256[] memory _amounts,
-      uint256[] memory _depositTimes,
-      uint256[] memory _lastWithDrawTimes
-      )
-    {
-        len = _db.dbs_pos[_owner].length;
-
-        _amounts = new uint256[](len);
-        _depositTimes = new uint256[](len);
-        _lastWithDrawTimes = new uint256[](len);
-
-        for (uint i = 0; i < len; i++)
-        {
-            _amounts[i] = _db.dbs_pos[_owner][i].amount;
-            _depositTimes[i] = ( _db.dbs_pos[_owner][i].depositTime );
-            _lastWithDrawTimes[i] = ( _db.dbs_pos[_owner][i].lastWithDrawTime );
-        }
-    }
-
 
     /// @notice Get a pos record by record index.
     /// @param  _owner : target owner address.
@@ -112,6 +100,32 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS
         _db.posAmountTotalSum -= record.amount;
 
         return true;
+    }
+
+    /// @notice Get all pos recoreds with owner address.
+    /// @param  _owner : target owner address.
+    function GetPosRecordList( address _owner )
+    public
+    view
+    returns (
+      uint  len,
+      uint256[] memory _amounts,
+      uint256[] memory _depositTimes,
+      uint256[] memory _lastWithDrawTimes
+      )
+      {
+        len = _db.dbs_pos[_owner].length;
+
+        _amounts = new uint256[](len);
+        _depositTimes = new uint256[](len);
+        _lastWithDrawTimes = new uint256[](len);
+
+        for (uint i = 0; i < len; i++)
+        {
+          _amounts[i] = _db.dbs_pos[_owner][i].amount;
+          _depositTimes[i] = ( _db.dbs_pos[_owner][i].depositTime );
+          _lastWithDrawTimes[i] = ( _db.dbs_pos[_owner][i].lastWithDrawTime );
+        }
     }
 
     function GetPosPoolTotalAmount()
@@ -189,7 +203,6 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS
       return true;
     }
 
-
     /// @notice Get a posout record detail info by index.
     function GetPosoutRecord(uint _rindex)
     public
@@ -255,6 +268,84 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS
         _record.posDecimal = posDecimal;
         _record.posEverCoinAmount = posEverCoinAmount;
         _record.posoutTime = posoutTime;
+    }
+
+    // 设定日产出最大值，理论上每年仅调用一次，用于控制逐年递减
+    function API_SetEverDayPosMaxAmount(uint256 maxAmount)
+    public
+    NeedAdminPermission()
+    {
+        SetUintValue("EverDayPosTokenAmount", maxAmount);
+    }
+
+    // 增加一个Pos收益记录，理论上每日应该调用一次, time 为时间戳，而实际上是当前block的时间戳
+    // 如果time设定为0，则回使用当前block的时间戳
+    function API_CreatePosOutRecord()
+    public
+    NeedManagerPermission()
+    returns (bool success)
+    {
+
+        (
+        uint len,
+        ,
+        ,
+        ,
+        uint256[] memory posoutTimes
+        ) = GetPosoutRecordList();
+
+
+        // 获取最后一条posout记录的时间，添加之前与当前时间比较，必须超过1 days，才允许添加
+        uint256 lastRecordPosoutTimes = 0;
+        uint256 time;
+
+        if ( len != 0 )
+        {
+            // 有数据
+            lastRecordPosoutTimes = posoutTimes[len - 1];
+        }
+
+        require ( now - lastRecordPosoutTimes >= 1 days, "posout time is not up." );
+        require ( GetPosPoolTotalAmount() > 0, "Not anymore amount in the pos pool." );
+
+        // 转换时间到整点 UTC标准时间戳
+        time = (now / 1 days) * 1 days;
+
+        uint256 everDayPosN = GetUintValue("EverDayPosTokenAmount") * 10 ** uint256((decimals * 2));
+        uint256 profitValue = everDayPosN / (GetPosPoolTotalAmount() / 10 ** uint256(decimals));
+
+        success = PushPosoutRecord(
+            everDayPosN,
+            decimals * 2,
+            profitValue,
+            time
+            );
+
+        if (success)
+        {
+        emit FX2_Externsion_Events_PosSupport.OnCreatePosoutRecord(
+            everDayPosN,
+            decimals * 2,
+            profitValue,
+            time
+            );
+        }
+    }
+
+    function API_SetEnableWithDrawPosProfit(bool enable)
+    public
+    NeedAdminPermission()
+    {
+        SetBoolValue("WithDrawPosProfitEnable", enable);
+    }
+
+    function API_GetEnableWithDrawPosProfit()
+    public
+    view
+    NeedManagerPermission()
+    returns (bool enable)
+    {
+        return GetBoolValue("WithDrawPosProfitEnable");
     }
 
     struct PosRecord

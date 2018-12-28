@@ -1,6 +1,7 @@
 pragma solidity >=0.4.22 <0.6.0;
 
 import "./FX2_BaseDBS.sol";
+import "../delegate/FX2_Investable_Delegate.sol";
 
 /// @title  BalanceDBS
 /// @author Martin.Ren
@@ -13,7 +14,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   uint256 public perMinerAmount = 1500000000 * 10 ** 8;
 
   mapping ( address => uint256 ) _balanceMap;
-  mapping ( address => mapping (address => uint256) ) _investmentAmountMap;
+  mapping ( address => mapping (string => uint256) ) _investmentAmountMap;
 
   /* I don't want implementation any method to support allowance modules. by martin*/
   /* mapping ( address => uint256 ) _allowance; */
@@ -34,35 +35,40 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
     return _balanceMap[owner];
   }
 
-  function InvestmentAmountIntoCalledContract( address _owner, uint256 _investAmount )
+  function InvestmentAmountTo( address _owner, uint256 _investAmount )
   public
   ConstractInterfaceMethod
   BetterThanExecuted(DBSContractState.Healthy)
   returns (uint256 balance)
   {
+    string memory investName = FX2_Investable_Delegate(msg.sender).InvestIdentifier();
     // this msg.sender only can be a visiter contract instance and have right permission.
-    require( IsExistContractVisiter(msg.sender) );
+    require( IsExistContractVisiter( msg.sender) && bytes(investName).length > 0 );
     require( _owner != address(0x0) && _investAmount > 0 );
     require( (_balanceMap[_owner] - _investAmount) + _investAmount == _balanceMap[_owner] );
 
     _balanceMap[msg.sender] += _investAmount;
     _balanceMap[_owner] -= _investAmount;
-    _investmentAmountMap[_owner][msg.sender] += _investAmount;
+
+    _investmentAmountMap[_owner][investName] += _investAmount;
 
     return _balanceMap[_owner];
   }
 
-  function DivestmentAmountFromCalledContract( address _owner, uint256 _divestAmount )
+  function DivestmentAmountFrom( address _owner, uint256 _divestAmount )
   public
   ConstractInterfaceMethod
   BetterThanExecuted(DBSContractState.Healthy)
   returns (uint256 balance)
   {
-    require( IsExistContractVisiter(msg.sender) );
+    string memory investName = FX2_Investable_Delegate(msg.sender).InvestIdentifier();
+    // this msg.sender only can be a visiter contract instance and have right permission.
+    require( IsExistContractVisiter( msg.sender) && bytes(investName).length > 0 );
     require( _owner != address(0x0) && _divestAmount > 0 );
-    require( _investmentAmountMap[_owner][msg.sender] >= _divestAmount );
+    require( _investmentAmountMap[_owner][investName] >= _divestAmount );
 
-    _investmentAmountMap[_owner][msg.sender] -= _divestAmount;
+    _investmentAmountMap[_owner][investName] -= _divestAmount;
+
     _balanceMap[msg.sender] -= _divestAmount;
     _balanceMap[_owner] += _divestAmount;
 

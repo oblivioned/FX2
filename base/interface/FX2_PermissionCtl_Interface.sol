@@ -1,35 +1,33 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-contract FX2_PermissionCtl_Interface
+interface FX2_PermissionCtl_Interface
 {
-  
-  
-  function IsSuperOrAdmin(address _sender) public view returns (bool exist);
+  function IsSuperOrAdmin(address _sender) external view returns (bool exist);
 
   function GetAllPermissionAddress()
-  public
+  external
   view
   returns (address superAdmin, address[] memory admins, address[] memory managers);
 
-  function RequireSuper(address _sender) public view;
+  function RequireSuper(address _sender) external view;
 
-  function RequireAdmin(address _sender) public view;
-  
-  function RequireManager(address _sender) public view;
+  function RequireAdmin(address _sender) external view;
+
+  function RequireManager(address _sender) external view;
 
   function AddManager(address manager)
-  public
+  external
   returns (bool success);
 
   function AddAdmin(address admin)
-  public
+  external
   returns (bool success);
-  
+
   function RemoveManager(address manager)
-  public
+  external
   returns (bool success);
-  
+
   function RemoveAdmin(address admin)
-  public
+  external
   returns (bool success);
 }

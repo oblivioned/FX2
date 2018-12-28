@@ -13,27 +13,27 @@ contract FX2_ERC20TokenDBS_Interface is FX2_BaseDBS_Interface
   uint256 public perMinerAmount;
 
   function BalanceOf(address owner)
-  public
+  external
   view
   returns (uint256 balance);
 
-  function InvestmentAmountIntoCalledContract( address _owner, uint256 _investAmount )
-  public
+  function InvestmentAmountTo( address _owner, uint256 _investAmount )
+  external
   returns (uint256 balance);
 
-  function DivestmentAmountFromCalledContract( address _owner, uint256 _divestAmount )
-  public
+  function DivestmentAmountFrom( address _owner, uint256 _divestAmount )
+  external
   returns (uint256 balance);
-  
+
   function TransferBalanceFromContract(address _owner, uint256 _addAmount)
-  public
+  external
   returns (uint256 balance);
 
   function GetTokenTotalBalance()
-  public
+  external
   view
   returns (uint256 totalBalance);
 
   function TransferBalance(address _from, address _to, uint256 _amount)
-  public;
+  external;
 }

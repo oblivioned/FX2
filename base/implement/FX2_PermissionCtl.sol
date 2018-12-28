@@ -23,7 +23,7 @@ contract FX2_PermissionCtl
     RequireAdmin(msg.sender);
     _;
   }
-  
+
   function IsSuperOrAdmin(address _sender) public view returns (bool exist)
   {
     if ( _sender == PermissionUsers.superOwner )
@@ -40,7 +40,7 @@ contract FX2_PermissionCtl
     }
   }
 
-  
+
 
   function GetAllPermissionAddress()
   public
@@ -200,5 +200,5 @@ contract FX2_PermissionCtl
     return false;
   }
 
-  
+
 }
