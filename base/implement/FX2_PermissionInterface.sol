@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "./interface/FX2_PermissionCtl_Interface.sol";
+import "../interface/FX2_PermissionCtl_Interface.sol";
 
 contract FX2_PermissionInterface
 {
@@ -118,13 +118,6 @@ contract FX2_PermissionInterface
     modifier NeedAdminPermission()
     {
         CTLInterface.RequireAdmin(msg.sender);
-        _;
-    }
-
-    /// @notice check manager permission,if faild interrupt.
-    modifier NeedManagerPermission()
-    {
-        CTLInterface.RequireManager(msg.sender);
         _;
     }
 

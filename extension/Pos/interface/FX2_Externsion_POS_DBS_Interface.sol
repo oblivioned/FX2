@@ -2,7 +2,7 @@ pragma solidity >=0.4.22 <0.6.0;
 
 import "../../../base/interface/FX2_BaseDBS_Interface.sol";
 
-contract FX2_Externsion_DBS_PosSupport_Interface is FX2_BaseDBS_Interface
+contract FX2_Externsion_POS_DBS_Interface is FX2_BaseDBS_Interface
 {
     /// @notice add instance of pos record into the database object;
     /// @param  _owner : new record owner address.
@@ -80,18 +80,18 @@ contract FX2_Externsion_DBS_PosSupport_Interface is FX2_BaseDBS_Interface
       )
     external
     returns (bool success);
-    
+
     /// @notice Get a posout record detail info by index.
     function GetPosoutRecord(uint _rindex)
     external
     view
-    returns ( 
-        uint256 posTotal, 
-        uint256 posDecimal, 
-        uint256 posEverCoinAmount, 
-        uint256 posoutTime 
+    returns (
+        uint256 posTotal,
+        uint256 posDecimal,
+        uint256 posEverCoinAmount,
+        uint256 posoutTime
         );
-    
+
 
     /// @notice Get all posout record detail list.
     function GetPosoutRecordList()

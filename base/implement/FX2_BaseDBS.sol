@@ -1,10 +1,11 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "../FX2_PermissionInterface.sol";
+import "./FX2_PermissionInterface.sol";
+import "../FX2_FrameworkInfo.sol";
 
 /// @title  ExtensionModules-Pos-DBS
 /// @author Martin.Ren
-contract FX2_BaseDBS is FX2_PermissionInterface
+contract FX2_BaseDBS is FX2_PermissionInterface, FX2_FrameworkInfo
 {
   function SetUintValue(string memory key, uint value)
   public
@@ -100,7 +101,7 @@ contract FX2_BaseDBS is FX2_PermissionInterface
   mapping (string => address) _addressHashMap;
   mapping (string => bool) _boolHashMap;
 
-  
+
   /////////////////// FX2Framework infomation //////////////////
   string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'FX2_BaseDBS'}";
 }

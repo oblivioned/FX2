@@ -1,7 +1,7 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "../../../base/implement/FX2_BaseDBS.sol";
-import "./events.sol";
+import "../../base/implement/FX2_BaseDBS.sol";
+import "./contracts/FX2_Externsion_POS_Events.sol";
 
 /// @title  ExtensionModules-Pos-DBS
 /// @author Martin.Ren
@@ -11,20 +11,22 @@ interface ERC20DecimalsInterface
     function decimals() external view returns (uint8);
 }
 
-contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS, FX2_Externsion_Events_PosSupport
+contract FX2_Externsion_POS_DBS is
+FX2_BaseDBS,
+FX2_Externsion_POS_Events
 {
     /// @notice Copy some variables that are not allowed to be modified
     ///         copy to TokenDBS data.
     uint8 decimals;
 
-    constructor( 
+    constructor(
         address erc20TokenAddress,
         address permissionCTL
         ) public payable
     {
         decimals = ERC20DecimalsInterface(erc20TokenAddress).decimals();
         CTLInterface = FX2_PermissionCtl_Interface(permissionCTL);
-        
+
         _uintHashMap["EverDayPosTokenAmount"] = 900000;
         _uintHashMap["MaxRemeberPosRecord"] = 30;
         _uintHashMap["JoinPosMinAmount"] = 10000000000;
@@ -285,7 +287,7 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS, FX2_Externsion_Events_Pos
     // 如果time设定为0，则回使用当前block的时间戳
     function API_CreatePosOutRecord()
     public
-    NeedManagerPermission()
+    NeedAdminPermission()
     returns (bool success)
     {
 
@@ -326,7 +328,7 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS, FX2_Externsion_Events_Pos
 
         if (success)
         {
-        emit FX2_Externsion_Events_PosSupport.OnCreatePosoutRecord(
+          emit OnCreatePosoutRecord(
             everDayPosN,
             decimals * 2,
             profitValue,
@@ -345,7 +347,7 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS, FX2_Externsion_Events_Pos
     function API_GetEnableWithDrawPosProfit()
     public
     view
-    NeedManagerPermission()
+    NeedAdminPermission()
     returns (bool enable)
     {
         return GetBoolValue("WithDrawPosProfitEnable");
@@ -378,6 +380,6 @@ contract FX2_Externsion_DBS_PosSupport is FX2_BaseDBS, FX2_Externsion_Events_Pos
     }
 
     DB _db;
-    
+
     string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'DBS','Externsion':'Pos'}";
 }

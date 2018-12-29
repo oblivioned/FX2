@@ -1,12 +1,12 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "../../../base/interface/FX2_ERC20TokenDBS_Interface.sol";
-import "../../../base/delegate/FX2_Investable_Delegate.sol";
-import "./interface.sol";
-import "./events.sol";
+import "../ERC20Token/interface/FX2_ERC20TokenDBS_Interface.sol";
+import "../../base/delegate/FX2_Investable_Delegate.sol";
+import "./interface/FX2_Externsion_POS_DBS_Interface.sol";
+import "./contracts/FX2_Externsion_POS_Events.sol";
 
-contract FX2_Externsion_IMPL_PosSupport is
-FX2_Externsion_Events_PosSupport,
+contract FX2_Externsion_POS_IMPL is
+FX2_Externsion_POS_Events,
 FX2_Investable_Delegate
 {
   constructor(
@@ -16,22 +16,22 @@ FX2_Investable_Delegate
       public
       payable
   {
-    DBS_Pos = FX2_Externsion_DBS_PosSupport_Interface(posSupportDBS);
+    DBS_Pos = FX2_Externsion_POS_DBS_Interface(posSupportDBS);
     DBS_Token = FX2_ERC20TokenDBS_Interface(tokenAddressDBS);
 
-    readOnlyTokenDecimals = uint8(DBS_Token.decimals());
+    readOnlyTokenDecimals = uint8(DBS_Token.GetUintValue("decimals"));
   }
 
   // 将可用余额参与POS
   function DespoitToPos(uint256 amount) public returns (bool success)
   {
-    require( DBS_Token.BalanceOf(msg.sender) >= amount && amount >= DBS_Pos.GetUintValue("JoinPosMinAmount") );
+    require( DBS_Token.GetAddressBalance(msg.sender) >= amount && amount >= DBS_Pos.GetUintValue("JoinPosMinAmount") );
 
     DBS_Token.InvestmentAmountTo(msg.sender, amount);
 
     if ( success = DBS_Pos.AddPosRecord(msg.sender, amount)  )
     {
-        emit FX2_Externsion_Events_PosSupport.OnCreatePosRecord(amount);
+        emit OnCreatePosRecord(amount);
     }
   }
 
@@ -41,7 +41,7 @@ FX2_Investable_Delegate
   view
   returns (uint256 profit, uint256 amount, uint256 lastPosoutTime)
   {
-    FX2_Externsion_DBS_PosSupport_Interface.PosRecord memory pRecord;
+    FX2_Externsion_POS_DBS_Interface.PosRecord memory pRecord;
 
     // 获取 Pos记录
     (
@@ -137,10 +137,11 @@ FX2_Investable_Delegate
       {
         DBS_Token.TransferBalanceFromContract(msg.sender, posProfit);
 
-        emit FX2_Externsion_Events_PosSupport.OnRescissionPosRecord(
-                amount,
-                posProfit,
-                DBS_Pos.GetBoolValue("WithDrawPosProfitEnable"));
+        emit OnRescissionPosRecord(
+            amount,
+            posProfit,
+            DBS_Pos.GetBoolValue("WithDrawPosProfitEnable")
+            );
       }
     }
   }
@@ -177,10 +178,10 @@ FX2_Investable_Delegate
 
     if ( amountTotalSum > 0 )
     {
-      emit FX2_Externsion_Events_PosSupport.OnRescissionPosRecordAll(
-        amountTotalSum, profitTotalSum,
-        DBS_Pos.GetBoolValue("WithDrawPosProfitEnable")
-        );
+      emit OnRescissionPosRecordAll(
+          amountTotalSum, profitTotalSum,
+          DBS_Pos.GetBoolValue("WithDrawPosProfitEnable")
+          );
     }
 
   }
@@ -236,7 +237,7 @@ FX2_Investable_Delegate
         DBS_Token.TransferBalanceFromContract(msg.sender, profit);
     }
 
-    emit FX2_Externsion_Events_PosSupport.OnWithdrawPosRecordPofit(
+    emit OnWithdrawPosRecordPofit(
         posAmount,
         _depositTime,
         distantPosoutTime,
@@ -270,11 +271,11 @@ FX2_Investable_Delegate
       profitSum += posProfit;
       posAmountSum += amount;
 
-      emit FX2_Externsion_Events_PosSupport.OnWithdrawPosRecordPofitAll(
-        posAmountSum,
-        profitSum,
-        DBS_Pos.GetBoolValue("WithDrawPosProfitEnable")
-        );
+      emit OnWithdrawPosRecordPofitAll(
+          posAmountSum,
+          profitSum,
+          DBS_Pos.GetBoolValue("WithDrawPosProfitEnable")
+          );
     }
   }
 
@@ -291,12 +292,12 @@ FX2_Investable_Delegate
     return "Some desc for this invest..";
   }
 
-  FX2_Externsion_DBS_PosSupport_Interface   DBS_Pos;
+  FX2_Externsion_POS_DBS_Interface   DBS_Pos;
 
   FX2_ERC20TokenDBS_Interface               DBS_Token;
 
   // token dbs seted decimals.
   uint256 readOnlyTokenDecimals;
-  
+
   string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'IMPL','Externsion':'Pos'}";
 }

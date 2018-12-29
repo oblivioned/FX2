@@ -1,34 +1,33 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "./FX2_BaseDBS.sol";
-import "../delegate/FX2_Investable_Delegate.sol";
+import "../../base/implement/FX2_BaseDBS.sol";
+import "../../base/delegate/FX2_Investable_Delegate.sol";
+import "../../base/FX2_FrameworkInfo.sol";
 
 /// @title  BalanceDBS
 /// @author Martin.Ren
 contract FX2_ERC20TokenDBS is FX2_BaseDBS
 {
-  uint256 public totalSupply = 5000000000 * 10 ** 8;
-  string  public name = "ANT(Coin)";
-  uint256 public decimals = 8;
-  string  public symbol = "ANT";
-  uint256 public perMinerAmount = 1500000000 * 10 ** 8;
-
   mapping ( address => uint256 ) _balanceMap;
   mapping ( address => mapping (string => uint256) ) _investmentAmountMap;
 
   /* I don't want implementation any method to support allowance modules. by martin*/
   /* mapping ( address => uint256 ) _allowance; */
-  constructor( address perMinerAddress, address permissionCTL )
+  constructor( address permissionCTL )
   public
   payable
   {
-    _balanceMap[address(this)] = totalSupply - perMinerAmount;
-    _balanceMap[perMinerAddress] = perMinerAmount;
-    
+    _uintHashMap["totalSupply"] = 5000000000 * 10 ** 8;
+    _uintHashMap["decimals"] = 8;
+    _uintHashMap["permineAmount"] = 1500000000 * 10 ** 8;
+
+    _balanceMap[address(this)] = _uintHashMap["totalSupply"] - _uintHashMap["permineAmount"];
+    _balanceMap[msg.sender] = _uintHashMap["permineAmount"];
+
     CTLInterface = FX2_PermissionCtl_Interface(permissionCTL);
   }
 
-  function BalanceOf(address owner)
+  function GetAddressBalance(address owner)
   public
   view
   BetterThanExecuted(DBSContractState.AnyTimes)
@@ -112,7 +111,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
     _balanceMap[_from] -= _amount;
     _balanceMap[_to] += _amount;
   }
-  
+
   /////////////////// FX2Framework infomation //////////////////
   string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'FX2_ERC20TokenDBS'}";
 }
