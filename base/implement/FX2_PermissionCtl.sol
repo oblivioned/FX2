@@ -1,8 +1,6 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import "./FX2_FrameworkInfo.sol";
-
-contract FX2_PermissionCtl is FX2_FrameworkInfo
+contract FX2_PermissionCtl
 {
   struct Table
   {
@@ -99,6 +97,7 @@ contract FX2_PermissionCtl is FX2_FrameworkInfo
     PermissionUsers.admins.push(admin);
   }
 
+
   function RemoveAdmin(address admin)
   public
   OnlyOnwer
@@ -122,7 +121,6 @@ contract FX2_PermissionCtl is FX2_FrameworkInfo
 
     return false;
   }
-  
-  /////////////////// FX2Framework infomation //////////////////
-  string public FX2_ModulesName = "FX2.PermissionCtl";
+
+  string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'FX2_PermissionCtl'}";
 }

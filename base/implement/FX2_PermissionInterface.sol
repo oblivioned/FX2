@@ -1,8 +1,9 @@
 pragma solidity >=0.4.22 <0.6.0;
 
 import "../interface/FX2_PermissionCtl_Interface.sol";
+import "../FX2_FrameworkInfo.sol";
 
-contract FX2_PermissionInterface
+contract FX2_PermissionInterface is FX2_FrameworkInfo
 {
     enum DBSContractState
     {
@@ -211,4 +212,8 @@ contract FX2_PermissionInterface
     FX2_PermissionCtl_Interface CTLInterface;
 
     address[]                   constractVisiters;
+    
+    
+    /////////////////// FX2Framework infomation //////////////////
+    string public FX2_ModulesName = "FX2.PermissionInterface.sol";
 }

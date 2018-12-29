@@ -3,7 +3,7 @@ pragma solidity >=0.4.22 <0.6.0;
 import "./interface/FX2_ERC20TokenInterface.sol";
 import "../../base/FX2_FrameworkInfo.sol";
 
-contract FX2_ExpansibilityToken is FX2_FrameworkInfo
+contract FX2_ERC20Token_IMPL is FX2_FrameworkInfo
 {
   address TokenDBS;
 
@@ -43,5 +43,10 @@ contract FX2_ExpansibilityToken is FX2_FrameworkInfo
 
     return true;
   }
+  
+  /////////////////// FX2Framework infomation //////////////////
+  string    public FX2_ContractVer = "0.0.1 Release 2018-12-30";
+  string    public FX2_ModulesName = "FX2.Extension.ERC20Token.IMPL";
+  string    public FX2_ExtensionID = "ERC20Token";
 
 }

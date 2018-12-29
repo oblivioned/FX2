@@ -9,6 +9,10 @@ contract FX2_Externsion_POS_IMPL is
 FX2_Externsion_POS_Events,
 FX2_Investable_Delegate
 {
+  // Implements FX2_Investable_Delegate.
+  string  public InvestIdentifier = "FX2.Externsion.PosInvest";
+  uint256 public ProfitPoolTotal  = 3500000000 * 10 ** 8;
+    
   constructor(
       address posSupportDBS,
       address tokenAddressDBS
@@ -279,19 +283,6 @@ FX2_Investable_Delegate
     }
   }
 
-  /// @notice Private code
-  // implement delegate if not, can't use any abount Investment function.
-  function InvestIdentifier() external view returns (string memory identifier)
-  {
-    return "FX2.Externsion.PosInvest";
-  }
-
-  ///
-  function StatusDesc() external view returns (string memory desc)
-  {
-    return "Some desc for this invest..";
-  }
-
   FX2_Externsion_POS_DBS_Interface   DBS_Pos;
 
   FX2_ERC20TokenDBS_Interface               DBS_Token;
@@ -299,5 +290,8 @@ FX2_Investable_Delegate
   // token dbs seted decimals.
   uint256 readOnlyTokenDecimals;
 
-  string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'IMPL','Externsion':'Pos'}";
+  /////////////////// FX2Framework infomation //////////////////
+  string    public FX2_ContractVer = "0.0.1 Release 2018-12-30";
+  string    public FX2_ModulesName = "FX2.Extension.Pos.IMPL";
+  string    public FX2_ExtensionID = "Pos";
 }

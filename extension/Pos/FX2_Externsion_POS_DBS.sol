@@ -381,5 +381,8 @@ FX2_Externsion_POS_Events
 
     DB _db;
 
-    string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'DBS','Externsion':'Pos'}";
+    /////////////////// FX2Framework infomation //////////////////
+    string    public FX2_ContractVer = "0.0.1 Release 2018-12-30";
+    string    public FX2_ModulesName = "FX2.Extension.Pos.DBS";
+    string    public FX2_ExtensionID = "Pos";
 }

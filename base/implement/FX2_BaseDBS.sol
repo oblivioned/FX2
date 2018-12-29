@@ -5,7 +5,8 @@ import "../FX2_FrameworkInfo.sol";
 
 /// @title  ExtensionModules-Pos-DBS
 /// @author Martin.Ren
-contract FX2_BaseDBS is FX2_PermissionInterface, FX2_FrameworkInfo
+
+contract FX2_BaseDBS is FX2_PermissionInterface
 {
   function SetUintValue(string memory key, uint value)
   public
@@ -103,5 +104,5 @@ contract FX2_BaseDBS is FX2_PermissionInterface, FX2_FrameworkInfo
 
 
   /////////////////// FX2Framework infomation //////////////////
-  string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'FX2_BaseDBS'}";
+  string public FX2_ModulesName = "FX2.BaseDBS";
 }

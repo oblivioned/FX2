@@ -6,6 +6,7 @@ import "../../base/FX2_FrameworkInfo.sol";
 
 /// @title  BalanceDBS
 /// @author Martin.Ren
+
 contract FX2_ERC20TokenDBS is FX2_BaseDBS
 {
   mapping ( address => uint256 ) _balanceMap;
@@ -112,6 +113,9 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
     _balanceMap[_to] += _amount;
   }
 
+  
   /////////////////// FX2Framework infomation //////////////////
-  string public FX2_VersionInfo = "{'Symbol':'Aya','Ver':'0.0.1 Release 2018-12-28','Modules':'FX2_ERC20TokenDBS'}";
+  string    public FX2_ContractVer = "0.0.1 Release 2018-12-30";
+  string    public FX2_ModulesName = "FX2.Extension.ERC20Token.DBS";
+  string    public FX2_ExtensionID = "ERC20Token";
 }
