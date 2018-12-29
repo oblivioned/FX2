@@ -141,7 +141,7 @@ contract FX2_PermissionInterface is FX2_FrameworkInfo
     {
         for (uint i = 0; i < constractVisiters.length; i++ )
         {
-            if ( constractVisiters[i] == visiter )
+            if ( constractVisiters[i].FX2_ContractAddr == visiter )
             {
                 return true;
             }
@@ -160,9 +160,16 @@ contract FX2_PermissionInterface is FX2_FrameworkInfo
         ContractState = state;
     }
 
-    function ConstractVisiters() public view returns (address[] memory ret)
+    function ConstractVisiters() public view returns (
+        address[] memory ret
+        )
     {
-      return constractVisiters;
+        ret = new address[](constractVisiters.length);
+        
+        for ( uint i = 0; i < constractVisiters.length; i++ )
+        {
+            ret[i] = constractVisiters[i].FX2_ContractAddr;
+        }
     }
 
     /// @notice add pass access contract visiter by this dbs contract.
@@ -173,13 +180,17 @@ contract FX2_PermissionInterface is FX2_FrameworkInfo
     {
         for (uint i = 0; i < constractVisiters.length; i++ )
         {
-            if ( constractVisiters[i] == visiter )
+            if ( constractVisiters[i].FX2_ContractAddr == visiter )
             {
                 return false;
             }
         }
-
-        constractVisiters.push(visiter);
+        
+        ( bool supportFX2, InfoData memory data ) = ReadInfoAt(visiter);
+        
+        require( supportFX2 );
+        constractVisiters.push(data);
+        
         return true;
     }
 
@@ -191,7 +202,7 @@ contract FX2_PermissionInterface is FX2_FrameworkInfo
     {
       for (uint i = 0; i < constractVisiters.length; i++ )
       {
-          if ( constractVisiters[i] == visiter )
+          if ( constractVisiters[i].FX2_ContractAddr == visiter )
           {
               for (uint j = i; j < constractVisiters.length - 1; j++ )
               {
@@ -211,8 +222,7 @@ contract FX2_PermissionInterface is FX2_FrameworkInfo
     /// Some private variable.
     FX2_PermissionCtl_Interface CTLInterface;
 
-    address[]                   constractVisiters;
-    
+    InfoData[]                  constractVisiters;
     
     /////////////////// FX2Framework infomation //////////////////
     string public FX2_ModulesName = "FX2.PermissionInterface.sol";
