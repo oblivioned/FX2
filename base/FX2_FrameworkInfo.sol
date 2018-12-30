@@ -8,7 +8,7 @@
  *
  */
 
-pragma solidity >=0.4.22 <0.6.0;
+pragma solidity >=0.5.0 <0.6.0;
 
 /// @title  FX2 任意模块的信息基础合约，用于标示插件的基本信息和版本信息
 /// @author Martin.Ren

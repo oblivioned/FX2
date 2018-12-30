@@ -8,7 +8,7 @@
  *
  */
 
-pragma solidity >=0.4.22 <0.6.0;
+pragma solidity >=0.5.0 <0.6.0;
 
 import "../../base/implement/FX2_BaseDBS.sol";
 import "../../base/FX2_FrameworkInfo.sol";
@@ -150,7 +150,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
 
     _balanceMap[newImplAddress] = _balanceMap[originModules];
     _balanceMap[originModules] = 0;
-    
+
     success = true;
   }
 

@@ -1,4 +1,4 @@
-pragma solidity >=0.4.22 <0.6.0;
+pragma solidity >=0.5.0 <0.6.0;
 
 import "./interface/FX2_ERC20TokenDBS_Interface.sol";
 import "../../base/FX2_FrameworkInfo.sol";
