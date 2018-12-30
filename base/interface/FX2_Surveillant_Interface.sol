@@ -12,8 +12,8 @@ pragma solidity >=0.4.22 <0.6.0;
 
 import "../FX2_FrameworkInfo.sol";
 
-/// @notice 监督者工作模式支持
-///         原因:"设置监督者"可以解决一些信任问题，由于本质上对于插座合约对权限控制是授权
+/// @title  监督者工作模式支持
+/// @notice 原因:"设置监督者"可以解决一些信任问题，由于本质上对于插座合约对权限控制是授权
 ///         一个地址就行数据读写，如果增加对地址是一个恶意的合约就行修改自己的余额，如果
 ///         使用监视者对添加权限对地址就行“审查”与审批，则可以解决此问题。
 ///         举例:
@@ -84,7 +84,7 @@ contract FX2_Surveillant_Interface is FX2_FrameworkInfo
   ///         为”监督者“的地址才可以执行。
   ///         AddModules : 申请添加插件模块
   ///         MigrateModules : 申请迁移某个已接入存在的插件模块
-  /// @param passAddress : 插件合约地址
+  /// @param rejectAddress : 插件合约地址
   function RejectReviewEvent(address rejectAddress) external;
 
 

@@ -52,10 +52,10 @@ FX2_ModulesManager_Interface
 
     /// @notice 健康状态发生改变时候,如断言检测失败，或者由管理员，或者有权限操作的合约就行了
     ///         当前合约状态的改变。
-    /// @param  blockNumbe  : 状态改变时，当前的区块高度（块号）
-    /// @param  txdata      : 导致状态改变的原始交易数据
-    /// @param  origin      : 当前合约改变前的状态
-    /// @param  current     : 当前合约当前状态
+    /// @return  blockNumbe  : 状态改变时，当前的区块高度（块号）
+    /// @return  txdata      : 导致状态改变的原始交易数据
+    /// @return  origin      : 当前合约改变前的状态
+    /// @return  current     : 当前合约当前状态
     event OnExaminationStateChanged(
         uint256 blockNumber,
         bytes txdata,
@@ -65,9 +65,9 @@ FX2_ModulesManager_Interface
         );
 
     /// @notice 当前合约发生fallback()
-    /// @param  blockNumbe  : 状态改变时，当前的区块高度（块号）
-    /// @param  txdata      : 导致状态改变的原始交易数据
-    /// @param  state       : 当前合约当前状态
+    /// @return  blockNumbe  : 状态改变时，当前的区块高度（块号）
+    /// @return  txdata      : 导致状态改变的原始交易数据
+    /// @return  state       : 当前合约当前状态
     event OnException(
         uint256 blockNumber,
         bytes txdata,
@@ -386,7 +386,7 @@ FX2_ModulesManager_Interface
     ///         为”监督者“的地址才可以执行。
     ///         AddModules : 申请添加插件模块
     ///         MigrateModules : 申请迁移某个已接入存在的插件模块
-    /// @param passAddress : 插件合约地址
+    /// @param passAddress 插件合约地址
     function PassReviewEvent(address passAddress) external ServerllantOnly
     {
       // 1.Find and remove Review event
@@ -456,7 +456,7 @@ FX2_ModulesManager_Interface
     ///         为”监督者“的地址才可以执行。
     ///         AddModules : 申请添加插件模块
     ///         MigrateModules : 申请迁移某个已接入存在的插件模块
-    /// @param passAddress : 插件合约地址
+    /// @param rejectAddress : 插件合约地址
     function RejectReviewEvent(address rejectAddress) external ServerllantOnly
     {
       for ( uint i = 0; i < reviewEvents.length; i++ )

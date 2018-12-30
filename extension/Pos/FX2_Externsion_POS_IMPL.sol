@@ -1,13 +1,11 @@
 pragma solidity >=0.4.22 <0.6.0;
 
 import "../ERC20Token/interface/FX2_ERC20TokenDBS_Interface.sol";
-import "../../base/delegate/FX2_Investable_Delegate.sol";
 import "./interface/FX2_Externsion_POS_DBS_Interface.sol";
 import "./contracts/FX2_Externsion_POS_Events.sol";
 
 contract FX2_Externsion_POS_IMPL is
-FX2_Externsion_POS_Events,
-FX2_Investable_Delegate
+FX2_Externsion_POS_Events
 {
   // Implements FX2_Investable_Delegate.
   string  public InvestIdentifier = "FX2.Externsion.PosInvest";
@@ -211,14 +209,6 @@ FX2_Investable_Delegate
       )
   {
     return DBS_Pos.GetPosoutRecordList();
-  }
-
-  function GetPosoutRecordCount()
-  public
-  view
-  returns (uint count)
-  {
-    (count,,,,) = DBS_Pos.GetPosoutRecordList();
   }
 
   // 提取指定Pos记录的收益

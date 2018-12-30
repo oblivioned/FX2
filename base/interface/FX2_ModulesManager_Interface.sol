@@ -21,7 +21,7 @@ interface FX2_ModulesManager_Interface
   ///         批后就行权限开放，由于增加模块实际上本质的工作是对目标地址就行调用授权，如果
   ///         申请已经提交，但是被驳回，新部署的插件合约只能作为一个废弃不可用的状态，因为
   ///         没有插座合约授权他读写数据。
-  ///@param   modulesAddress : 迁移的目标合约，必须是已经实现部署的插件合约，并且是一个
+  /// @param  modulesAddress : 迁移的目标合约，必须是已经实现部署的插件合约，并且是一个
   ///         合法的FX2插件模块，可以是FX2提供的标准扩展模块，也可以是遵循FX2规则的自定义
   ///         插件。
   function AddExternsionModule( address modulesAddress ) external returns (bool success);

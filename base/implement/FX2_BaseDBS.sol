@@ -20,8 +20,8 @@ contract FX2_BaseDBS is FX2_PermissionInterface
 {
 
   /// @notice 设置一个Uint值
-  /// @param  key:键名
-  /// @param  value:键值
+  /// @param  key 键名
+  /// @param  value 键值
   function SetUintValue(string memory key, uint value)
   public
   ConstractInterfaceMethod
@@ -31,8 +31,8 @@ contract FX2_BaseDBS is FX2_PermissionInterface
 
 
   /// @notice 检测键名是否存在
-  /// @param  key：键名
-  /// @return true：存在，false：不存在
+  /// @param  key 键名
+  /// @return true 存在，false：不存在
   function ExistUintKey(string memory key)
   public
   view
@@ -43,7 +43,7 @@ contract FX2_BaseDBS is FX2_PermissionInterface
 
 
   /// @notice 获取键名对应的值
-  /// @parma  key:键名
+  /// @param  key 键名
   /// @return 键名存在则返回实值，若不存在则返回0（在返回0时候，无法确认键值是否存在）
   function GetUintValue(string memory key)
   public
@@ -54,8 +54,8 @@ contract FX2_BaseDBS is FX2_PermissionInterface
   }
 
   /// @notice 设置一个Uint值
-  /// @param  key:键名
-  /// @param  value:键值
+  /// @param  key 键名
+  /// @param  value 键值
   function SetIntValue(string memory key, int value)
   public
   ConstractInterfaceMethod
@@ -65,8 +65,8 @@ contract FX2_BaseDBS is FX2_PermissionInterface
 
 
   /// @notice 检测键名是否存在
-  /// @param  key：键名
-  /// @return true：存在，false：不存在
+  /// @param  key 键名
+  /// @return true 存在，false：不存在
   function ExistIntKey(string memory key)
   public
   view
@@ -76,7 +76,7 @@ contract FX2_BaseDBS is FX2_PermissionInterface
   }
 
   /// @notice 获取键名对应的值
-  /// @parma  key:键名
+  /// @param  key 键名
   /// @return 键名存在则返回实值，若不存在则返回0（在返回0时候，无法确认键值是否存在）
   function GetIntValue(string memory key)
   public
@@ -88,8 +88,8 @@ contract FX2_BaseDBS is FX2_PermissionInterface
 
 
   /// @notice 设置一个Uint值
-  /// @param  key:键名
-  /// @param  value:键值
+  /// @param  key 键名
+  /// @param  value 键值
   function SetAddress(string memory key, address value)
   public
   ConstractInterfaceMethod
@@ -98,8 +98,8 @@ contract FX2_BaseDBS is FX2_PermissionInterface
   }
 
   /// @notice 检测键名是否存在
-  /// @param  key：键名
-  /// @return true：存在，false：不存在
+  /// @param  key 键名
+  /// @return true 存在，false：不存在
   function ExistAddressKey(string memory key)
   public
   view
@@ -109,7 +109,7 @@ contract FX2_BaseDBS is FX2_PermissionInterface
   }
 
   /// @notice 获取键名对应的值
-  /// @parma  key:键名
+  /// @param  key 键名
   /// @return 键名存在则返回实值，若不存在则返回0（在返回0时候，无法确认键值是否存在）
   function GetAddress(string memory key)
   public
@@ -121,8 +121,8 @@ contract FX2_BaseDBS is FX2_PermissionInterface
 
 
   /// @notice 设置一个Uint值
-  /// @param  key:键名
-  /// @param  value:键值
+  /// @param  key 键名
+  /// @param  value 键值
   function SetBoolValue(string memory key, bool value)
   public
   ConstractInterfaceMethod
@@ -132,7 +132,7 @@ contract FX2_BaseDBS is FX2_PermissionInterface
 
 
   /// @notice 获取键名对应的值
-  /// @parma  key:键名
+  /// @param  key 键名
   /// @return 键名存在则返回实值，若不存在则返回0（在返回0时候，无法确认键值是否存在）
   function GetBoolValue(string memory key)
   public
