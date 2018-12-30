@@ -11,8 +11,7 @@ FX2_Investable_Delegate
 {
   // Implements FX2_Investable_Delegate.
   string  public InvestIdentifier = "FX2.Externsion.PosInvest";
-  uint256 public ProfitPoolTotal  = 3500000000 * 10 ** 8;
-    
+
   constructor(
       address posSupportDBS,
       address tokenAddressDBS

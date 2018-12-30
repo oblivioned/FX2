@@ -30,7 +30,7 @@ FX2_Externsion_POS_Events
         _uintHashMap["EverDayPosTokenAmount"] = 900000;
         _uintHashMap["MaxRemeberPosRecord"] = 30;
         _uintHashMap["JoinPosMinAmount"] = 10000000000;
-        _boolHashMap["WithDrawPosProfitEnable"] = false;
+        _uintHashMap["WithDrawPosProfitEnable"] = 1;
     }
 
     /// @notice add instance of pos record into the database object;

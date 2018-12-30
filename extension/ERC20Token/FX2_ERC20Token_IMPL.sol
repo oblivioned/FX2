@@ -11,7 +11,7 @@ contract FX2_ERC20Token_IMPL is FX2_FrameworkInfo
   {
     TokenDBS = tokenDBSAddr;
   }
-  
+
   function totalSupply() public view returns ( uint256 )
   {
     return FX2_ERC20TokenInterface(TokenDBS).GetUintValue("totalSupply");
@@ -43,7 +43,7 @@ contract FX2_ERC20Token_IMPL is FX2_FrameworkInfo
 
     return true;
   }
-  
+
   /////////////////// FX2Framework infomation //////////////////
   string    public FX2_ContractVer = "0.0.1 Release 2018-12-30";
   string    public FX2_ModulesName = "FX2.Extension.ERC20Token.IMPL";
