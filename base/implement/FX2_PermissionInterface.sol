@@ -194,7 +194,7 @@ FX2_ModulesManager_Interface
     function AllExtensionModules() public view returns (
         uint len,
         address[] memory addresses,
-        DBSContractState[] states
+        DBSContractState[] memory states
         )
     {
         len = modulesIMPLs.length;
@@ -413,16 +413,16 @@ FX2_ModulesManager_Interface
       InfoData memory originModuleInfo;
       for ( uint x = 0; x < modulesIMPLs.length; x++ )
       {
-        if ( keccak256(bytes(modulesIMPLs[i].FX2_ModulesName)) == keccak256(bytes(reviewEvents[i].modulesName)) )
+        if ( keccak256(bytes(modulesIMPLs[x].FX2_ModulesName)) == keccak256(bytes(passEvent.modulesName)) )
         {
-            if ( keccak256(bytes(reviewEvents[i].evnetCode)) == keccak256("AddModules") )
+            if ( keccak256(bytes(passEvent.evnetCode)) == keccak256("AddModules") )
             {
                 emit OnReviewNotifaction( passAddress, "PassedAddModulesEvent:but address already exists。" );
                 return ;
             }
             else
             {
-                originModuleInfo = modulesIMPLs[i];
+                originModuleInfo = modulesIMPLs[x];
             }
         }
       }
