@@ -49,8 +49,8 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   returns (
     uint256 availBalance,
     uint256 len,
-    address[] investmentAddress,
-    uint256[] amounts
+    address[] memory investmentAddress,
+    uint256[] memory amounts
     )
   {
     availBalance = _balanceMap[owner];

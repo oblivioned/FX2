@@ -52,7 +52,6 @@ interface FX2_Externsion_POS_IMPL_Interface
   function WithDrawPosProfit(uint posRecordIndex) external returns (uint256 profit, uint256 posAmount);
 
   /// @notice 提取所有参与Pos的记录的收益，不提取本金
-  /// @param  posRecordIndex      : 参与pos的记录号
   /// @return profitSum           : 成功提取的收益总和
   /// @return posAmount           : 对应的记录的本金总和
   function WithDrawPosAllProfit() external returns (uint256 profitSum, uint256 posAmountSum);
