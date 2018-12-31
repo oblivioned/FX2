@@ -10,33 +10,29 @@
 
 pragma solidity >=0.5.0 <0.6.0;
 
-import "../../base/implement/FX2_BaseDBS.sol";
-import "../../base/FX2_FrameworkInfo.sol";
+import "../../base/abstract/FX2_AbstractDBS.sol";
 
 /// @title  BalanceDBS
 /// @author Martin.Ren
-contract FX2_ERC20TokenDBS is FX2_BaseDBS
+contract FX2_ERC20TokenDBS is FX2_AbstractDBS
 {
-  /* I don't want implementation any method to support allowance modules. by martin*/
-  /* mapping ( address => uint256 ) _allowance; */
-  constructor( address permissionCTL )
+  constructor( FX2_PermissionCtl_Interface fx2_pcimpl, FX2_ModulesManager_Interface fx2_mmimpl )
   public
-  payable
   {
+    FX2_PermissionCtl_Modifier_LinkIMPL( fx2_pcimpl );
+    FX2_ModulesManager_Modifier_LinkIMPL( fx2_mmimpl );
+
     _uintHashMap["totalSupply"] = 5000000000 * 10 ** 8;
     _uintHashMap["decimals"] = 8;
     _uintHashMap["permineAmount"] = 1500000000 * 10 ** 8;
 
     _balanceMap[address(this)] = _uintHashMap["totalSupply"] - _uintHashMap["permineAmount"];
     _balanceMap[msg.sender] = _uintHashMap["permineAmount"];
-
-    CTLInterface = FX2_PermissionCtl_Interface(permissionCTL);
   }
 
   function GetAddressBalance(address owner)
   public
   view
-  BetterThanExecuted(DBSContractState.AnyTimes)
   returns (uint256 balance)
   {
     return _balanceMap[owner];
@@ -45,55 +41,55 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   function GetBalanceDetails(address owner)
   public
   view
-  BetterThanExecuted(DBSContractState.AnyTimes)
   returns (
     uint256 availBalance,
     uint256 len,
     address[] memory investmentAddress,
-    uint256[] memory amounts
+    uint256[] memory amounts,
+    bytes32[] memory hashNames
     )
   {
-    availBalance = _balanceMap[owner];
-    len = modulesIMPLs.length;
+    ( hashNames, investmentAddress) = FX2_MMImpl.AllExtensionModuleHashNames();
 
-    investmentAddress = new address[](len);
+    availBalance = _balanceMap[owner];
+    len = hashNames.length;
     amounts = new uint256[](len);
 
     for ( uint i = 0; i < len; i++ )
     {
-      amounts[i] = _investmentAmountMap[owner][modulesIMPLs[i].FX2_ModulesName];
+      amounts[i] = _investmentAmountMap[owner][hashNames[i]];
     }
   }
 
   function InvestmentAmountTo( address _owner, uint256 _investAmount )
   public
-  ConstractInterfaceMethod
-  BetterThanExecuted(DBSContractState.Healthy)
+  ValidModuleAPI
+  BetterThanExecuted(FX2_ModulesManager_Interface.ModulesState.Healthy)
   returns (uint256 balance)
   {
-    ( ,InfoData memory info ) = ReadInfoAt(msg.sender);
+    ( ,ModuleInfoData memory info ) = ReadInfoAt(msg.sender);
     require( _owner != address(0x0) && _investAmount > 0 );
     require( (_balanceMap[_owner] - _investAmount) + _investAmount == _balanceMap[_owner] );
 
     _balanceMap[msg.sender] += _investAmount;
     _balanceMap[_owner] -= _investAmount;
 
-    _investmentAmountMap[_owner][info.FX2_ModulesName] += _investAmount;
+    _investmentAmountMap[_owner][info.FX2_HashName] += _investAmount;
 
     return _balanceMap[_owner];
   }
 
   function DivestmentAmountFrom( address _owner, uint256 _divestAmount )
   public
-  ConstractInterfaceMethod
-  BetterThanExecuted(DBSContractState.Healthy)
+  ValidModuleAPI
+  BetterThanExecuted(FX2_ModulesManager_Interface.ModulesState.Healthy)
   returns (uint256 balance)
   {
-    ( ,InfoData memory info ) = ReadInfoAt(msg.sender);
+    ( ,ModuleInfoData memory info ) = ReadInfoAt(msg.sender);
     require( _owner != address(0x0) && _divestAmount > 0 );
-    require( _investmentAmountMap[_owner][info.FX2_ModulesName] >= _divestAmount );
+    require( _investmentAmountMap[_owner][info.FX2_HashName] >= _divestAmount );
 
-    _investmentAmountMap[_owner][info.FX2_ModulesName] -= _divestAmount;
+    _investmentAmountMap[_owner][info.FX2_HashName] -= _divestAmount;
 
     _balanceMap[msg.sender] -= _divestAmount;
     _balanceMap[_owner] += _divestAmount;
@@ -103,8 +99,8 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
 
   function TransferBalanceFromContract(address _owner, uint256 _addAmount)
   public
-  ConstractInterfaceMethod
-  BetterThanExecuted(DBSContractState.Sicking)
+  ValidModuleAPI
+  BetterThanExecuted(FX2_ModulesManager_Interface.ModulesState.Sicking)
   returns (uint256 balance)
   {
     require( _owner != address(0x0) && _addAmount > 0 );
@@ -117,7 +113,7 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
   function GetTokenTotalBalance()
   public
   view
-  BetterThanExecuted(DBSContractState.AnyTimes)
+  BetterThanExecuted(FX2_ModulesManager_Interface.ModulesState.AnyTimes)
   returns (uint256 totalBalance)
   {
     return _balanceMap[address(this)];
@@ -125,8 +121,8 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
 
   function TransferBalance(address _from, address _to, uint256 _amount)
   public
-  ConstractInterfaceMethod
-  BetterThanExecuted(DBSContractState.Sicking)
+  ValidModuleAPI
+  BetterThanExecuted(FX2_ModulesManager_Interface.ModulesState.Sicking)
   {
     require ( address(0x0) != _from && _from != _to );
     require ( _amount > 0 && _balanceMap[_from] >= _amount );
@@ -154,9 +150,15 @@ contract FX2_ERC20TokenDBS is FX2_BaseDBS
     success = true;
   }
 
+  modifier ThisContractOnly()
+  {
+    require (msg.sender == address(this) );
+    _;
+  }
+
   // Private
   mapping ( address => uint256 ) _balanceMap;
-  mapping ( address => mapping (string => uint256) ) _investmentAmountMap;
+  mapping ( address => mapping ( bytes32 => uint256 ) ) _investmentAmountMap;
 
   /////////////////// FX2Framework infomation //////////////////
   string    public FX2_ContractVer = "0.0.1 Release 2018-12-30";

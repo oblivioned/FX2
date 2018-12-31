@@ -1,7 +1,8 @@
 pragma solidity >=0.5.0 <0.6.0;
 
-import "../../base/implement/FX2_BaseDBS.sol";
-import "./contracts/FX2_Externsion_POS_Events.sol";
+import "../../base/abstract/FX2_AbstractDBS.sol";
+
+import "./interface/FX2_Externsion_POS_DBS_Interface.sol";
 
 /// @title  ExtensionModules-Pos-DBS
 /// @author Martin.Ren
@@ -12,25 +13,31 @@ interface ERC20DecimalsInterface
 }
 
 contract FX2_Externsion_POS_DBS is
-FX2_BaseDBS,
+FX2_AbstractDBS,
 FX2_Externsion_POS_Events
 {
     /// @notice Copy some variables that are not allowed to be modified
     ///         copy to TokenDBS data.
     uint8 decimals;
+    
+    FX2_ERC20TokenDBS_Interface FX2_TKDBS;
 
-    constructor(
-        address erc20TokenAddress,
-        address permissionCTL
-        ) public payable
+    constructor( 
+        FX2_PermissionCtl_Interface fx2_pcimpl, 
+        FX2_ModulesManager_Interface fx2_mmimpl,
+        FX2_ERC20TokenDBS_Interface fx2_tokendbs
+        ) public
     {
-        decimals = ERC20DecimalsInterface(erc20TokenAddress).decimals();
-        CTLInterface = FX2_PermissionCtl_Interface(permissionCTL);
-
+        FX2_PermissionCtl_Modifier_LinkIMPL( fx2_pcimpl );
+        FX2_ModulesManager_Modifier_LinkIMPL( fx2_mmimpl );
+        FX2_TKDBS = fx2_tokendbs;
+        
+        decimals = uint8( FX2_TKDBS.GetUintValue("decimals") );
+        
         _uintHashMap["EverDayPosTokenAmount"] = 900000;
         _uintHashMap["MaxRemeberPosRecord"] = 30;
         _uintHashMap["JoinPosMinAmount"] = 10000000000;
-        _uintHashMap["WithDrawPosProfitEnable"] = 1;
+        _uintHashMap["WithDrawPosProfitEnable"] = 0;
     }
 
     /// @notice add instance of pos record into the database object;
@@ -38,7 +45,7 @@ FX2_Externsion_POS_Events
     /// @param  _amount : Amount sum of number by min decimal. lg. '10 * 10 ** 8' or '10 * 10 ** decimal'.
     function AddPosRecord( address _owner, uint256 _amount )
     public
-    ConstractInterfaceMethod
+    ValidModuleAPI
     returns (bool success)
     {
         _db.dbs_pos[_owner].push( CreateNewPosRecord(_amount, now, 0) );
@@ -50,7 +57,7 @@ FX2_Externsion_POS_Events
 
     function UpdataPosRecordLastWithDrawTime( address _owner, uint _rIndex, uint256 newValue )
     public
-    ConstractInterfaceMethod
+    ValidModuleAPI
     returns (bool success)
     {
       if ( _rIndex < _db.dbs_pos[_owner].length )
@@ -81,7 +88,7 @@ FX2_Externsion_POS_Events
     /// @param  _rIndex : exist pos record index in db.
     function RemovePosRecord( address _owner, uint _rIndex )
     public
-    ConstractInterfaceMethod
+    ValidModuleAPI
     returns (bool success)
     {
         PosRecord[] storage list = _db.dbs_pos[_owner];
@@ -157,7 +164,7 @@ FX2_Externsion_POS_Events
     /// @notice Modifier posout record save max sizes,but can only add size.
     function SetPosoutRecordMaxSize (uint16 _maxSize)
     public
-    ConstractInterfaceMethod
+    ValidModuleAPI
     {
         require( _db.posOutRecordMaxSize < _maxSize, "PosOutRecordMaxSize allows only additional records, not fewer" );
 
@@ -187,7 +194,7 @@ FX2_Externsion_POS_Events
       uint256 _posoutTime
       )
     public
-    ConstractInterfaceMethod
+    ValidModuleAPI
     returns (bool success)
     {
       if ( _db.dbs_out.length >= _db.posOutRecordMaxSize )
@@ -278,7 +285,7 @@ FX2_Externsion_POS_Events
     // 设定日产出最大值，理论上每年仅调用一次，用于控制逐年递减
     function API_SetEverDayPosMaxAmount(uint256 maxAmount)
     public
-    NeedAdminPermission()
+    NeedAdminPermission
     {
         SetUintValue("EverDayPosTokenAmount", maxAmount);
     }
@@ -287,7 +294,7 @@ FX2_Externsion_POS_Events
     // 如果time设定为0，则回使用当前block的时间戳
     function API_CreatePosOutRecord()
     public
-    NeedAdminPermission()
+    NeedAdminPermission
     returns (bool success)
     {
 
@@ -339,7 +346,7 @@ FX2_Externsion_POS_Events
 
     function API_SetEnableWithDrawPosProfit(bool enable)
     public
-    NeedAdminPermission()
+    NeedAdminPermission
     {
         SetBoolValue("WithDrawPosProfitEnable", enable);
     }
@@ -347,7 +354,7 @@ FX2_Externsion_POS_Events
     function API_GetEnableWithDrawPosProfit()
     public
     view
-    NeedAdminPermission()
+    NeedAdminPermission
     returns (bool enable)
     {
         return GetBoolValue("WithDrawPosProfitEnable");

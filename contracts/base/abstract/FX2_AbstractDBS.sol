@@ -10,21 +10,30 @@
 
 pragma solidity >=0.5.0 <0.6.0;
 
-import "./FX2_PermissionInterface.sol";
-import "../FX2_FrameworkInfo.sol";
+import "../interface/FX2_AbstractDBS_Interface.sol";
 
 /// @title  FX2提供的基础DBS合约，提供基础的数据读写和一个支持 uint，bool，address的KV（key-value）的小型数据库
 ///         所有关于数据控制村粗的在使用时需要继承此合约。
 /// @author Martin.Ren
-contract FX2_BaseDBS is FX2_PermissionInterface
+contract FX2_AbstractDBS is
+FX2_FrameworkInfo,
+FX2_AbstractDBS_Interface,
+FX2_PermissionCtl_Modifier,
+FX2_ModulesManager_Modifier
 {
+  /* constructor( FX2_PermissionCtl_Interface fx2_pcimpl, FX2_ModulesManager_Interface fx2_mmimpl ) public
+  {
+    FX2_PermissionCtl_Modifier_LinkIMPL( fx2_pcimpl );
+    FX2_ModulesManager_Modifier_LinkIMPL( fx2_mmimpl );
+  } */
 
   /// @notice 设置一个Uint值
   /// @param  key 键名
   /// @param  value 键值
+
   function SetUintValue(string memory key, uint value)
   public
-  ConstractInterfaceMethod
+  ValidModuleAPI
   {
     _uintHashMap[key] = value;
   }
@@ -58,7 +67,7 @@ contract FX2_BaseDBS is FX2_PermissionInterface
   /// @param  value 键值
   function SetIntValue(string memory key, int value)
   public
-  ConstractInterfaceMethod
+  ValidModuleAPI
   {
     _uintHashMap[key] = uint256(value);
   }
@@ -92,7 +101,7 @@ contract FX2_BaseDBS is FX2_PermissionInterface
   /// @param  value 键值
   function SetAddress(string memory key, address value)
   public
-  ConstractInterfaceMethod
+  ValidModuleAPI
   {
     _uintHashMap[key] = uint256(value);
   }
@@ -125,7 +134,7 @@ contract FX2_BaseDBS is FX2_PermissionInterface
   /// @param  value 键值
   function SetBoolValue(string memory key, bool value)
   public
-  ConstractInterfaceMethod
+  ValidModuleAPI
   {
     _uintHashMap[key] = value ? 1 : 0;
   }
@@ -147,6 +156,7 @@ contract FX2_BaseDBS is FX2_PermissionInterface
   /*                         Stroage 变量定义                      */
   /*——————————————————————————————————————————————————————————————*/
   mapping (string => uint) _uintHashMap;
+
 
   /*——————————————————————————————————————————————————————————————*/
   /*                          FX2 模块信息                         */

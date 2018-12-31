@@ -1,8 +1,10 @@
 pragma solidity >=0.5.0 <0.6.0;
 
-import "../../../base/interface/FX2_BaseDBS_Interface.sol";
+import "../../../base/interface/FX2_AbstractDBS_Interface.sol";
+import "../../ERC20Token/interface/FX2_ERC20TokenDBS_Interface.sol";
+import "../contracts/FX2_Externsion_POS_Events.sol";
 
-contract FX2_Externsion_POS_DBS_Interface is FX2_BaseDBS_Interface
+contract FX2_Externsion_POS_DBS_Interface is FX2_AbstractDBS_Interface
 {
     /// @notice add instance of pos record into the database object;
     /// @param  _owner : new record owner address.

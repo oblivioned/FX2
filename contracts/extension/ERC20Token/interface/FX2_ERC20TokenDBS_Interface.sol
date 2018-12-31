@@ -10,11 +10,11 @@
 
 pragma solidity >=0.5.0 <0.6.0;
 
-import "../../../base/interface/FX2_BaseDBS_Interface.sol";
+import "../../../base/interface/FX2_AbstractDBS_Interface.sol";
 
 /// @title  BalanceDBS
 /// @author Martin.Ren
-contract FX2_ERC20TokenDBS_Interface is FX2_BaseDBS_Interface
+contract FX2_ERC20TokenDBS_Interface is FX2_AbstractDBS_Interface
 {
   /// @notice 获取对应地址在该插座合约的余额
   /// @param  owner   : 获取余额指定的地址

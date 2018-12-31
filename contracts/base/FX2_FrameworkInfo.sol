@@ -29,7 +29,7 @@ contract FX2_FrameworkInfo
   /// @notice 插件模块中子组成构建合约的标识符
   string    public FX2_ExtensionID;
 
-  struct InfoData
+  struct ModuleInfoData
   {
     string  FX2_VersionInfo;
     uint256 FX2_DeployTime;
@@ -37,19 +37,19 @@ contract FX2_FrameworkInfo
     string  FX2_ModulesName;
     string  FX2_ExtensionID;
     address FX2_ContractAddr;
+    bytes32 FX2_HashName;
   }
 
   /// @notice 读取指定地址的合约，检测是否支持FX2，若支持继续读取基本信息
   /// @param  target : 读取目标合约地址
   /// @return supportFX2 : 是否支持FX2
   /// @return data : 其他信息
-  function ReadInfoAt(address target) internal view returns ( bool supportFX2, InfoData memory data )
+  function ReadInfoAt(address target) internal view returns ( bool supportFX2, ModuleInfoData memory data )
   {
     data.FX2_ContractAddr = target;
     data.FX2_VersionInfo = FX2_FrameworkInfo(target).FX2_VersionInfo();
 
     bytes memory s = bytes(FX2_VersionInfo);
-
     bytes memory t = bytes(data.FX2_VersionInfo);
 
     for ( uint i = 0; i < 11; i++ )
@@ -61,7 +61,7 @@ contract FX2_FrameworkInfo
         else
         {
             supportFX2 = false;
-            data = InfoData("",0,"","","",target);
+            data = ModuleInfoData("", 0, "", "", "", target, "");
         }
     }
 
@@ -70,5 +70,6 @@ contract FX2_FrameworkInfo
     data.FX2_ContractVer = FX2_FrameworkInfo(target).FX2_ContractVer();
     data.FX2_ModulesName = FX2_FrameworkInfo(target).FX2_ModulesName();
     data.FX2_ExtensionID = FX2_FrameworkInfo(target).FX2_ExtensionID();
+    data.FX2_HashName    = keccak256(bytes(data.FX2_ModulesName));
   }
 }

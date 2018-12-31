@@ -2,8 +2,6 @@ pragma solidity >=0.5.0 <0.6.0;
 
 interface FX2_Externsion_POS_IMPL_Interface
 {
-
-
   /// @notice 将可用余额加入Pos池
   /// @param  amount  : 参与的数量
   /// @return success : 投入结果

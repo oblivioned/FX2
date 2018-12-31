@@ -16,7 +16,7 @@ contract TestFX2_FrameworkInfo is FX2_FrameworkInfo
 
   function test_ReadThisInfo() public
   {
-    (bool supportFX2, FX2_FrameworkInfo.InfoData memory data) = ReadInfoAt(address(this));
+    (bool supportFX2, FX2_FrameworkInfo.ModuleInfoData memory data) = ReadInfoAt(address(this));
 
     Assert.equal( supportFX2, true, "supportFX2 返回错误");
     Assert.equal( keccak256(bytes(data.FX2_VersionInfo)), keccak256(bytes(FX2_VersionInfo)), "FX2_VersionInfo 返回错误");
@@ -30,7 +30,7 @@ contract TestFX2_FrameworkInfo is FX2_FrameworkInfo
 
   function test_ReadOtherInfo() public
   {
-    (bool supportFX2, FX2_FrameworkInfo.InfoData memory data) = ReadInfoAt( address(INFO) );
+    (bool supportFX2, FX2_FrameworkInfo.ModuleInfoData memory data) = ReadInfoAt( address(INFO) );
 
     Assert.equal( supportFX2, true, "supportFX2 返回错误");
     Assert.equal( keccak256(bytes(data.FX2_VersionInfo)), keccak256(bytes(FX2_VersionInfo)), "FX2_VersionInfo 返回错误");

@@ -12,6 +12,12 @@ pragma solidity >=0.5.0 <0.6.0;
 
 import "../FX2_FrameworkInfo.sol";
 
+import "../interface/FX2_Surveillant_Interface.sol";
+
+import "../interface/FX2_PermissionCtl_Interface.sol";
+
+import "../modifier/FX2_PermissionCtl_Modifier.sol";
+
 /// @title  监督者工作模式支持
 /// @notice 原因:"设置监督者"可以解决一些信任问题，由于本质上对于插座合约对权限控制是授权
 ///         一个地址就行数据读写，如果增加对地址是一个恶意的合约就行修改自己的余额，如果
@@ -35,30 +41,16 @@ import "../FX2_FrameworkInfo.sol";
 ///             “技术提供者”的操作。此时你可以选择让交易平台提供一个地址，添加为“监督者”
 ///             已解决信任问题。
 /// @author Martin.Ren
-contract FX2_Surveillant_Interface is FX2_FrameworkInfo
+contract FX2_Surveillant is
+FX2_Surveillant_Interface,
+FX2_FrameworkInfo,
+FX2_PermissionCtl_Modifier
 {
+  FX2_PermissionCtl_Interface FX2_PCImpl;
 
-  /// @notice 审批事件定义
-  struct ReviewEvent
+  constructor( FX2_PermissionCtl_Interface fx2_pcimpl ) public
   {
-    /// 申请人
-    address sender;
-    /// 已经部署的插件合约地址
-    address implAddress;
-    /// 插件模块名称
-    string  modulesName;
-    /// 事件名：目前暂时支持 AddModules, MigrateModules两种
-    string  evnetCode;
-  }
-
-  /// @notice 审批事件发生被审批时
-  event OnReviewNotifaction( address reviewAddress, string reviewDesc ) ;
-
-  /// @notice 限制仅有监督者可以调用的函数修改器
-  modifier ServerllantOnly
-  {
-    require (msg.sender == Surveillanter);
-    _;
+    FX2_PCImpl = fx2_pcimpl;
   }
 
   /// @notice 设置“监督者”，方法只能调用一次，设置一个监督者后，对合约就行扩展则需要审批
@@ -69,15 +61,26 @@ contract FX2_Surveillant_Interface is FX2_FrameworkInfo
   ///         原因:"设置监督者"可以解决一些信任问题，由于本质上对于插座合约对权限控制是授权
   ///         一个地址就行数据读写，如果增加对地址是一个恶意的合约就行修改自己的余额，如果
   ///         使用监视者对添加权限对地址就行“审查”与审批，则可以解决此问题。
-  function SetSurveillanter(address addr) external;
+  function SetSurveillanter(address addr)
+  external
+  NeedSuperPermission(FX2_PCImpl)
+  {
+    require( Surveillanter != address(0x0) );
+    Surveillanter = addr;
 
+    return ;
+  }
 
   /// @notice “监督者”审批提交的事件，目前支持两种事件，只有在设置了“监督者”并且交易发送人
   ///         为”监督者“的地址才可以执行。
   ///         AddModules : 申请添加插件模块
   ///         MigrateModules : 申请迁移某个已接入存在的插件模块
   /// @param passAddress : 插件合约地址
-  function PassReviewEvent(address passAddress) external;
+  function PassReviewEvent(address passAddress) external
+  ServerllantOnly
+  {
+
+  }
 
 
   /// @notice “监督者”拒绝提交的事件，目前支持两种事件，只有在设置了“监督者”并且交易发送人
@@ -88,6 +91,12 @@ contract FX2_Surveillant_Interface is FX2_FrameworkInfo
   function RejectReviewEvent(address rejectAddress) external;
 
 
+  /// @notice 限制仅有监督者可以调用的函数修改器
+  modifier ServerllantOnly
+  {
+    require (msg.sender == Surveillanter);
+    _;
+  }
   /*——————————————————————————————————————————————————————————————*/
   /*                         Stroage 变量定义                      */
   /*——————————————————————————————————————————————————————————————*/

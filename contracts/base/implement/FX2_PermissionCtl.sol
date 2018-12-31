@@ -10,30 +10,16 @@
 
 pragma solidity >=0.5.0 <0.6.0;
 
-import "./FX2_FrameworkInfo.sol";
+import "../FX2_FrameworkInfo.sol";
 
 /// @notice 权限控制合约，即可以操作插座模块和插件模块的权限控制地址管理。
 /// @author Martin.Ren
-contract FX2_PermissionCtl is FX2_FrameworkInfo
+contract FX2_PermissionCtl is
+FX2_FrameworkInfo
 {
   constructor() public
   {
     PermissionUsers.superOwner = msg.sender;
-  }
-
-  /// @notice 拥有者限制修改器，一般来说这里的owner一般作为FX2模块中的super权限。
-  modifier OnlyOnwer()
-  {
-    RequireSuper(msg.sender);
-    _;
-  }
-
-  /// @notice 管理员限制修改器，管理员又owner权限添加。
-  modifier OwerAndAdmin()
-  {
-    RequireSuper(msg.sender);
-    RequireAdmin(msg.sender);
-    _;
   }
 
   /// @notice 检测对应的地址是否具备super或者admin权限
@@ -53,8 +39,9 @@ contract FX2_PermissionCtl is FX2_FrameworkInfo
         return true;
       }
     }
+    
+    return false;
   }
-
 
   /// @notice 获取所有已经配置的具备权限的用户和权限类型
   /// @return superAdmin : 超级权限，合约部署者，最高权限
@@ -62,13 +49,10 @@ contract FX2_PermissionCtl is FX2_FrameworkInfo
   function GetAllPermissionAddress()
   public
   view
-  OwerAndAdmin
   returns ( address superAdmin, address[] memory admins )
   {
     return ( PermissionUsers.superOwner, PermissionUsers.admins );
   }
-
-
 
   /// @notice 函数形式校验超级权限，如果校验不通过会使用require断言中断执行。
   function RequireSuper(address _sender) public view
@@ -90,8 +74,7 @@ contract FX2_PermissionCtl is FX2_FrameworkInfo
     {
       if ( PermissionUsers.admins[i] == _sender )
       {
-        exist = true;
-        break;
+        return;
       }
     }
 
@@ -102,9 +85,10 @@ contract FX2_PermissionCtl is FX2_FrameworkInfo
   /// @return 添加的结果
   function AddAdmin(address admin)
   public
-  OnlyOnwer
   returns (bool success)
   {
+    require ( msg.sender == PermissionUsers.superOwner );
+    
     for (uint i = 0; i < PermissionUsers.admins.length; i++ )
     {
       if (PermissionUsers.admins[i] == admin)
@@ -120,9 +104,10 @@ contract FX2_PermissionCtl is FX2_FrameworkInfo
   /// @return 添加的结果
   function RemoveAdmin(address admin)
   public
-  OnlyOnwer
   returns (bool success)
   {
+    require ( msg.sender == PermissionUsers.superOwner );
+
     for (uint i = 0; i < PermissionUsers.admins.length; i++ )
     {
       if (PermissionUsers.admins[i] == admin)

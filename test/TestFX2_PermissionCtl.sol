@@ -3,21 +3,17 @@ pragma solidity >=0.5.0 <0.6.0;
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
 
-import "../contracts/base/FX2_PermissionCtl.sol";
+import "../contracts/base/interface/FX2_PermissionCtl_Interface.sol";
 
 contract TestFX2_PermissionCtl
 {
-  FX2_PermissionCtl CTL;
-
-  function test_InitPermissionCtl() public
-  {
-    CTL = new FX2_PermissionCtl();
-  }
+  /* DiviesInterface constant private Divies = DiviesInterface(0xc7029Ed9EBa97A096e72607f4340c34049C7AF48); */
+  FX2_PermissionCtl_Interface private CTL = FX2_PermissionCtl_Interface(0x59EDdAcF8026B9CD0cBEfF9Fb6F6cE16d4995ebE);
 
   // 检测超级权限是否正确
   function test_IsSuperOrAdmin() public
   {
-    Assert.equal( CTL.IsSuperOrAdmin(address(this)), true, "超级权限检测失败" );
+    /* Assert.equal( CTL.IsSuperOrAdmin(address(this)), true, "超级权限检测失败" ); */
     Assert.equal( CTL.IsSuperOrAdmin(msg.sender), false, "超级权限检测失败" );
   }
 

@@ -15,7 +15,7 @@ contract FX2_ERC20Token_IMPL is FX2_FrameworkInfo, FX2_ERC20Token_Events
 
   function totalSupply() public view returns ( uint256 )
   {
-    return FX2_ERC20TokenDBS_Interface(TokenDBS).GetUintValue("totalSupply");
+    return FX2_AbstractDBS_Interface(TokenDBS).GetUintValue("totalSupply");
   }
 
   function name() public pure returns ( string memory )
@@ -25,7 +25,7 @@ contract FX2_ERC20Token_IMPL is FX2_FrameworkInfo, FX2_ERC20Token_Events
 
   function decimals() public view returns ( uint8 )
   {
-    return uint8(FX2_ERC20TokenDBS_Interface(TokenDBS).GetUintValue("decimals"));
+    return uint8(FX2_AbstractDBS_Interface(TokenDBS).GetUintValue("decimals"));
   }
 
   function symbol() public pure returns ( string memory )

@@ -10,14 +10,18 @@
 
 pragma solidity >=0.5.0 <0.6.0;
 
-import "./FX2_PermissionCtl_Interface.sol";
 import "../FX2_FrameworkInfo.sol";
 
-/// @notice FX2 关键权限合约，实现权限管理，合约状态管理等功能，作为DBS的主要权限控制合约
+import "../interface/FX2_ModulesManager_Interface.sol";
+import "../interface/FX2_PermissionCtl_Interface.sol";
+
+import "../modifier/FX2_ModulesManager_Modifier.sol";
+import "../modifier/FX2_PermissionCtl_Modifier.sol";
+
+/// @title  FX2提供的基础DBS合约，提供基础的数据读写和一个支持 uint，bool，address的KV（key-value）的小型数据库
+///         所有关于数据控制村粗的在使用时需要继承此合约。
 /// @author Martin.Ren
-contract FX2_BaseDBS_Interface is
-FX2_PermissionCtl_Interface,
-FX2_FrameworkInfo
+contract FX2_AbstractDBS_Interface
 {
   /// @notice 设置一个Uint值
   /// @param  key   : 键名

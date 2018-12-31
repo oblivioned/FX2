@@ -12,8 +12,33 @@ pragma solidity >=0.5.0 <0.6.0;
 
 /// @notice 合约扩展支持的Interface定义
 /// @author Martin.Ren
-interface FX2_ModulesManager_Interface
+contract FX2_ModulesManager_Interface
 {
+  enum ModulesState
+  {
+      /// @notice 健康：即未发现任何错误，正在正常运行的状态
+      Healthy,
+
+      /// @notice 生病：发现了部分小错误，但是并不影响大部分功能的运行
+      Sicking,
+
+      /// @notice 严重错误：发生了严重的错误，比如实现存入的Token提出时候发现余额不存在等，
+      ///         严重问题。
+      Error,
+
+      /// @notice 禁用：禁用状态
+      Disable,
+
+      /// @notice 已经迁移：合约已经迁移，当前合约已经作为一个废弃合约，此处FX2并不推荐讲
+      ///         合约就行释放，而是通过此状态限制功能，比如仍然可以取出投入的余额，但不能
+      ///         在继续投入和计算任何收益。
+      Migrated,
+
+      /// @notice 定义一个任何时间都可以进入但状态，即不受健康状态检查的限制，比如 pure
+      ///         view constant的函数。
+      AnyTimes
+  }
+
   /// @notice 内部实现会获取modulesAddress下是否是一个合法的FX2插件模块，并且检查对应插
   ///         件名称，如已经存在一个相同名称的插件，那么应该去使用“迁移”方法，而不是尝试增
   ///         加。
@@ -45,9 +70,8 @@ interface FX2_ModulesManager_Interface
 
   /// @notice 设置当前合约所接入的插件合约的起停状态,可以随时由有权账户就行设置起停
   /// @param  modulesAddress : 已经连接的插件合约地址
-  /// @param  enable : 设置启用(true),设置暂停使用(false)
-  function SetExternsionModuleEnable( address modulesAddress, bool enable ) external returns (bool sucecss);
-
+  /// @param  newState : 设置的新状态
+  function SetExternsionModuleState( address modulesAddress, ModulesState newState ) external returns (bool sucecss);
 
 
   /// @notice 实现合约部署工作的方法，在通过所有权限验证后，会调用该方法，就行合约迁移，请
@@ -57,4 +81,19 @@ interface FX2_ModulesManager_Interface
   /// @param  originModules : 原插件合约地址
   /// @param  newImplAddress : 迁移的目标插件地址
   function DoMigrateWorking( address originModules, address newImplAddress ) external returns (bool suucess);
+
+  function IsDoctorProgrammer( address addr ) external view returns ( bool ret );
+
+  function ChangeContractState( ModulesState state ) external;
+
+  function IsExistContractVisiter( address visiter ) external view returns (bool exist);
+
+  /// @notice 查看当前合约已经连接的插件合约，每个FX2的PermissionInterface合约都可以作
+  ///         为插座合约和插件合约，更具实际需求就行插件和插座的划分即可。
+  function AllExtensionModules() external view returns ( uint len, address[] memory addresses, ModulesState[] memory states);
+
+  /// @notice 获取所有已经配置的模块的名称的hash值，一般用于计算
+  function AllExtensionModuleHashNames() external view returns ( bytes32[] memory hashNames, address[] memory moduleAddress );
+
+  ModulesState public           State = ModulesState.Healthy;
 }
