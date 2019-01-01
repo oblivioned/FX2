@@ -39,7 +39,7 @@ FX2_FrameworkInfo
         return true;
       }
     }
-    
+
     return false;
   }
 
@@ -88,7 +88,7 @@ FX2_FrameworkInfo
   returns (bool success)
   {
     require ( msg.sender == PermissionUsers.superOwner );
-    
+
     for (uint i = 0; i < PermissionUsers.admins.length; i++ )
     {
       if (PermissionUsers.admins[i] == admin)
