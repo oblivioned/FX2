@@ -10,12 +10,21 @@
 
 pragma solidity >=0.5.0 <0.6.0;
 
-import "../../../base/interface/FX2_AbstractDBS_Interface.sol";
+import "../../../base/abstract/FX2_AbstractDBS.sol";
 
 /// @title  BalanceDBS
 /// @author Martin.Ren
-contract FX2_ERC20TokenDBS_Interface is FX2_AbstractDBS_Interface
+contract FX2_ERC20TokenDBS_Interface is FX2_AbstractDBS
 {
+  /// @notice 获取余额组成的详情
+  /// @param  owner             ：对应获取的地址
+  /// @return availBalance      : 可用余额数量
+  /// @return len               : 后续返回数据中数组的元素长度
+  /// @return investmentAddress : 投入到的合约地址
+  /// @return amounts           : 投入数量
+  /// @return hashNames         : 模块名称的Hash值
+  function GetBalanceDetails(address owner) external view returns ( uint256 availBalance, uint256 len, address[] memory investmentAddress, uint256[] memory amounts, bytes32[] memory hashNames);
+
   /// @notice 获取对应地址在该插座合约的余额
   /// @param  owner   : 获取余额指定的地址
   /// @return balance : 余额(最大精度 即 10 ** decimals)
@@ -42,11 +51,6 @@ contract FX2_ERC20TokenDBS_Interface is FX2_AbstractDBS_Interface
   /// @param  _addAmount : 增加的数量
   /// @return balance : 增加后owner地址中的余额(最大精度 即 10 ** decimals)
   function TransferBalanceFromContract(address _owner, uint256 _addAmount) external returns (uint256 balance);
-
-
-  /// @notice 获取矿池总余量
-  /// @return totalBalance : 矿池剩余总量(最大精度 即 10 ** decimals)
-  function GetTokenTotalBalance() external view returns (uint256 totalBalance);
 
 
   /// @notice 用户间转账功能,若不成功一定会产生断言

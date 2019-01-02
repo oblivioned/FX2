@@ -48,7 +48,5 @@ contract FX2_ERC20Token_IMPL is FX2_FrameworkInfo, FX2_ERC20Token_Events
   }
 
   /////////////////// FX2Framework infomation //////////////////
-  string    public FX2_ContractVer = "0.0.1 Release 2018-12-30";
   string    public FX2_ModulesName = "FX2.Extension.ERC20Token.IMPL";
-  string    public FX2_ExtensionID = "ERC20Token";
 }

@@ -74,6 +74,7 @@ contract FX2_ModulesManager_Interface
   function SetExternsionModuleState( address modulesAddress, ModulesState newState ) external returns (bool sucecss);
 
 
+  /*
   /// @notice 实现合约部署工作的方法，在通过所有权限验证后，会调用该方法，就行合约迁移，请
   ///         注意处理数据。注意originModules的模块名称必须与newImplAddress的模块名称
   ///         一致，否则将不会进入该函数就行迁移工作。DBS按理来说不支持迁移，因为数据的迁移
@@ -81,6 +82,7 @@ contract FX2_ModulesManager_Interface
   /// @param  originModules : 原插件合约地址
   /// @param  newImplAddress : 迁移的目标插件地址
   function DoMigrateWorking( address originModules, address newImplAddress ) external returns (bool suucess);
+  */
 
   function IsDoctorProgrammer( address addr ) external view returns ( bool ret );
 

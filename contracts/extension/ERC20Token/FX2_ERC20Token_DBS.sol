@@ -10,11 +10,11 @@
 
 pragma solidity >=0.5.0 <0.6.0;
 
-import "../../base/abstract/FX2_AbstractDBS.sol";
+import "./interface/FX2_ERC20TokenDBS_Interface.sol";
 
 /// @title  BalanceDBS
 /// @author Martin.Ren
-contract FX2_ERC20TokenDBS is FX2_AbstractDBS
+contract FX2_ERC20Token_DBS is FX2_ERC20TokenDBS_Interface
 {
   constructor( FX2_PermissionCtl_Interface fx2_pcimpl, FX2_ModulesManager_Interface fx2_mmimpl )
   public
@@ -31,7 +31,7 @@ contract FX2_ERC20TokenDBS is FX2_AbstractDBS
   }
 
   function GetAddressBalance(address owner)
-  public
+  external
   view
   returns (uint256 balance)
   {
@@ -39,7 +39,7 @@ contract FX2_ERC20TokenDBS is FX2_AbstractDBS
   }
 
   function GetBalanceDetails(address owner)
-  public
+  external
   view
   returns (
     uint256 availBalance,
@@ -62,7 +62,7 @@ contract FX2_ERC20TokenDBS is FX2_AbstractDBS
   }
 
   function InvestmentAmountTo( address _owner, uint256 _investAmount )
-  public
+  external
   ValidModuleAPI
   BetterThanExecuted(FX2_ModulesManager_Interface.ModulesState.Healthy)
   returns (uint256 balance)
@@ -80,7 +80,7 @@ contract FX2_ERC20TokenDBS is FX2_AbstractDBS
   }
 
   function DivestmentAmountFrom( address _owner, uint256 _divestAmount )
-  public
+  external
   ValidModuleAPI
   BetterThanExecuted(FX2_ModulesManager_Interface.ModulesState.Healthy)
   returns (uint256 balance)
@@ -98,7 +98,7 @@ contract FX2_ERC20TokenDBS is FX2_AbstractDBS
   }
 
   function TransferBalanceFromContract(address _owner, uint256 _addAmount)
-  public
+  external
   ValidModuleAPI
   BetterThanExecuted(FX2_ModulesManager_Interface.ModulesState.Sicking)
   returns (uint256 balance)
@@ -110,17 +110,8 @@ contract FX2_ERC20TokenDBS is FX2_AbstractDBS
     return _balanceMap[_owner] += _addAmount;
   }
 
-  function GetTokenTotalBalance()
-  public
-  view
-  BetterThanExecuted(FX2_ModulesManager_Interface.ModulesState.AnyTimes)
-  returns (uint256 totalBalance)
-  {
-    return _balanceMap[address(this)];
-  }
-
   function TransferBalance(address _from, address _to, uint256 _amount)
-  public
+  external
   ValidModuleAPI
   BetterThanExecuted(FX2_ModulesManager_Interface.ModulesState.Sicking)
   {
@@ -161,7 +152,5 @@ contract FX2_ERC20TokenDBS is FX2_AbstractDBS
   mapping ( address => mapping ( bytes32 => uint256 ) ) _investmentAmountMap;
 
   /////////////////// FX2Framework infomation //////////////////
-  string    public FX2_ContractVer = "0.0.1 Release 2018-12-30";
   string    public FX2_ModulesName = "FX2.Extension.ERC20Token.DBS";
-  string    public FX2_ExtensionID = "ERC20Token";
 }

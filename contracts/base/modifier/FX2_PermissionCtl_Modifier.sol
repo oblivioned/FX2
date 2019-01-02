@@ -14,7 +14,7 @@ import "../interface/FX2_PermissionCtl_Interface.sol";
 
 contract FX2_PermissionCtl_Modifier
 {
-  FX2_PermissionCtl_Interface FX2_PCImpl;
+  FX2_PermissionCtl_Interface internal FX2_PCImpl;
 
   function FX2_PermissionCtl_Modifier_LinkIMPL( FX2_PermissionCtl_Interface fx2_pcimpl )
   internal

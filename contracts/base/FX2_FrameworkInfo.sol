@@ -17,25 +17,13 @@ contract FX2_FrameworkInfo
   /// @notice 版本信息
   string    public FX2_VersionInfo      = "Powerby FX2 Aya 0.0.1 Release 2018-12-28";
 
-  /// @notice 合约部署时间
-  uint256   public FX2_DeployTime       = now;
-
-  /// @notice 插件版本,可重写，否则使用FX2框架版本作为插件版本号
-  string    public FX2_ContractVer      = "0.0.1";
-
   /// @notice 插件模块名称
   string    public FX2_ModulesName;
-
-  /// @notice 插件模块中子组成构建合约的标识符
-  string    public FX2_ExtensionID;
 
   struct ModuleInfoData
   {
     string  FX2_VersionInfo;
-    uint256 FX2_DeployTime;
-    string  FX2_ContractVer;
     string  FX2_ModulesName;
-    string  FX2_ExtensionID;
     address FX2_ContractAddr;
     bytes32 FX2_HashName;
   }
@@ -61,15 +49,12 @@ contract FX2_FrameworkInfo
         else
         {
             supportFX2 = false;
-            data = ModuleInfoData("", 0, "", "", "", target, "");
+            data = ModuleInfoData("", "", target, "");
         }
     }
 
     supportFX2 = true;
-    data.FX2_DeployTime  = FX2_FrameworkInfo(target).FX2_DeployTime();
-    data.FX2_ContractVer = FX2_FrameworkInfo(target).FX2_ContractVer();
     data.FX2_ModulesName = FX2_FrameworkInfo(target).FX2_ModulesName();
-    data.FX2_ExtensionID = FX2_FrameworkInfo(target).FX2_ExtensionID();
     data.FX2_HashName    = keccak256(bytes(data.FX2_ModulesName));
   }
 }
