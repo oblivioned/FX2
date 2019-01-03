@@ -5,6 +5,7 @@ import "./interface/FX2_Externsion_POS_DBS_Interface.sol";
 import "./contracts/FX2_Externsion_POS_Events.sol";
 
 contract FX2_Externsion_POS_IMPL is
+FX2_FrameworkInfo,
 FX2_Externsion_POS_Events
 {
   // Implements FX2_Investable_Delegate.
@@ -124,11 +125,7 @@ FX2_Externsion_POS_Events
   public
   returns ( uint256 posProfit, uint256 amount )
   {
-    uint256 distantPosoutTime;
-
-    (posProfit, amount, distantPosoutTime) = getPosRecordProfit(msg.sender, posRecordIndex);
-
-    require( DBS_Pos.UpdataPosRecordLastWithDrawTime(msg.sender, posRecordIndex, distantPosoutTime) );
+    ( posProfit, amount, ) = getPosRecordProfit(msg.sender, posRecordIndex);
 
     if ( DBS_Pos.RemovePosRecord(msg.sender, posRecordIndex) )
     {
@@ -280,7 +277,6 @@ FX2_Externsion_POS_Events
   uint256 readOnlyTokenDecimals;
 
   /////////////////// FX2Framework infomation //////////////////
-  string    public FX2_ContractVer = "0.0.1 Release 2018-12-30";
   string    public FX2_ModulesName = "FX2.Extension.Pos.IMPL";
-  string    public FX2_ExtensionID = "Pos";
+
 }

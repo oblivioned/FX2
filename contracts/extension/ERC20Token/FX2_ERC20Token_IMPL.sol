@@ -20,7 +20,7 @@ contract FX2_ERC20Token_IMPL is FX2_FrameworkInfo, FX2_ERC20Token_Events
 
   function name() public pure returns ( string memory )
   {
-    return "ANT(Coin)";
+    return "FFToken";
   }
 
   function decimals() public view returns ( uint8 )
@@ -30,7 +30,7 @@ contract FX2_ERC20Token_IMPL is FX2_FrameworkInfo, FX2_ERC20Token_Events
 
   function symbol() public pure returns ( string memory )
   {
-    return "ANT";
+    return "FFT";
   }
 
   function balanceOf(address _owner) public view returns (uint256 balance)

@@ -174,6 +174,7 @@ FX2_PermissionCtl_Modifier
   view
   returns (bool exist)
   {
+
     for (uint i = 0; i < modulesIMPLs.length; i++ )
     {
       if ( modulesIMPLs[i].FX2_ContractAddr == visiter )
@@ -181,6 +182,7 @@ FX2_PermissionCtl_Modifier
         return true;
       }
     }
+
     return false;
   }
 
@@ -224,7 +226,7 @@ FX2_PermissionCtl_Modifier
   /*——————————————————————————————————————————————————————————————*/
   address                       parentModule;
   ModuleInfoData[]              modulesIMPLs;
-  
+
   /*——————————————————————————————————————————————————————————————*/
   /*                          FX2 模块信息                         */
   /*——————————————————————————————————————————————————————————————*/

@@ -19,11 +19,11 @@ FX2_Externsion_POS_Events
     /// @notice Copy some variables that are not allowed to be modified
     ///         copy to TokenDBS data.
     uint8 decimals;
-    
+
     FX2_ERC20TokenDBS_Interface FX2_TKDBS;
 
-    constructor( 
-        FX2_PermissionCtl_Interface fx2_pcimpl, 
+    constructor(
+        FX2_PermissionCtl_Interface fx2_pcimpl,
         FX2_ModulesManager_Interface fx2_mmimpl,
         FX2_ERC20TokenDBS_Interface fx2_tokendbs
         ) public
@@ -31,9 +31,9 @@ FX2_Externsion_POS_Events
         FX2_PermissionCtl_Modifier_LinkIMPL( fx2_pcimpl );
         FX2_ModulesManager_Modifier_LinkIMPL( fx2_mmimpl );
         FX2_TKDBS = fx2_tokendbs;
-        
+
         decimals = uint8( FX2_TKDBS.GetUintValue("decimals") );
-        
+
         _uintHashMap["EverDayPosTokenAmount"] = 900000;
         _uintHashMap["MaxRemeberPosRecord"] = 30;
         _uintHashMap["JoinPosMinAmount"] = 10000000000;
@@ -95,10 +95,11 @@ FX2_Externsion_POS_Events
 
         if ( _rIndex >= list.length )
         {
+
             return false;
         }
 
-        PosRecord storage record = list[_rIndex];
+        _db.posAmountTotalSum -= list[_rIndex].amount;
 
         for (uint i = _rIndex; i < list.length - 1; i++)
         {
@@ -107,7 +108,6 @@ FX2_Externsion_POS_Events
 
         delete list[ list.length - 1 ];
         list.length --;
-        _db.posAmountTotalSum -= record.amount;
 
         return true;
     }
