@@ -1,6 +1,7 @@
 pragma solidity >=0.5.0 <0.6.0;
 
 import "../ERC20Token/interface/FX2_ERC20TokenDBS_Interface.sol";
+
 import "./interface/FX2_Externsion_POS_DBS_Interface.sol";
 import "./contracts/FX2_Externsion_POS_Events.sol";
 
@@ -33,7 +34,7 @@ FX2_Externsion_POS_Events
 
     if ( success = DBS_Pos.AddPosRecord(msg.sender, amount)  )
     {
-        emit OnCreatePosRecord(amount);
+        emit OnCreatePosRecord(amount, msg.sender);
     }
   }
 
@@ -134,14 +135,14 @@ FX2_Externsion_POS_Events
       if ( DBS_Pos.GetBoolValue("WithDrawPosProfitEnable") )
       {
         DBS_Token.TransferBalanceFromContract(msg.sender, posProfit);
-
-        emit OnRescissionPosRecord(
-            amount,
-            posProfit,
-            DBS_Pos.GetBoolValue("WithDrawPosProfitEnable")
-            );
       }
     }
+
+    emit OnRescissionPosRecord(
+        amount,
+        posProfit,
+        DBS_Pos.GetBoolValue("WithDrawPosProfitEnable")
+        );
   }
 
   // 一次性提取所有Pos参与记录的本金和收益

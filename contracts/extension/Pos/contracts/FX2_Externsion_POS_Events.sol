@@ -18,7 +18,8 @@ interface FX2_Externsion_POS_Events
     /* 当用户投入可用余额进入Pos池中 */
     event OnCreatePosRecord
     (
-      uint256 posAmount
+      uint256 posAmount,
+      address sender
     );
 
     /* 提取Pos池中投入的记录，提取并且删除记录，返回本金时发起 */

@@ -8,7 +8,8 @@ contract('FX2_Externsion_POS_IMPL', function (accounts) {
   var ERC20Token_IMPL_Instance;
   var POS_IMPL_Instance;
 
-  it("Test [DespoitToPos, GetPosRecordLists, GetCurrentPosSum]", function() {
+  /*
+  it("Test [DespoitToPos, GetPosRecordLists, GetCurrentPosSum, balanceOf]", function() {
 
     return FX2_ERC20Token_IMPL.deployed()
     .then(function(instance){
@@ -16,7 +17,7 @@ contract('FX2_Externsion_POS_IMPL', function (accounts) {
       return ERC20Token_IMPL_Instance.transfer(accounts[1], "30000000000000000")
     })
     .then(function(){
-      return ERC20Token_IMPL_Instance.transfer(accounts[2], "20000000000000000")
+      return ERC20Token_IMPL_Instance.transfer(accounts[2], "30000000000000000")
     })
     .then(function(){
       return ERC20Token_IMPL_Instance.transfer(accounts[3], "25000000000000000")
@@ -28,12 +29,12 @@ contract('FX2_Externsion_POS_IMPL', function (accounts) {
       return ERC20Token_IMPL_Instance.balanceOf(accounts[0])
     })
     .then(function(balance){
-      assert.equal(balance, "50000000000000000", "Use transfer faild.")
+      assert.equal(balance.toString(), "40000000000000000", "Use transfer faild.")
       return FX2_POS_IMPL.deployed()
     })
     .then(function(instance){
       POS_IMPL_Instance = instance;
-      return POS_IMPL_Instance.DespoitToPos("50000000000000000", {from:accounts[0]})
+      return POS_IMPL_Instance.DespoitToPos("30000000000000000", {from:accounts[0]})
     })
     .then(function(response){
       return POS_IMPL_Instance.DespoitToPos("30000000000000000", {from:accounts[1]})
@@ -60,7 +61,7 @@ contract('FX2_Externsion_POS_IMPL', function (accounts) {
       return ERC20Token_IMPL_Instance.balanceOf(accounts[0])
     })
     .then(function(balance){
-      assert.equal(balance.toString(), "0", "Test DespoitToPos Faild.")
+      assert.equal(balance.toString(), "10000000000000000", "Test DespoitToPos Faild.")
       return ERC20Token_IMPL_Instance.balanceOf(accounts[1])
     })
     .then(function(balance){
@@ -68,7 +69,7 @@ contract('FX2_Externsion_POS_IMPL', function (accounts) {
       return ERC20Token_IMPL_Instance.balanceOf(accounts[2])
     })
     .then(function(balance){
-      assert.equal(balance.toString(), "0", "Test DespoitToPos Faild.")
+      assert.equal(balance.toString(), "10000000000000000", "Test DespoitToPos Faild.")
       return ERC20Token_IMPL_Instance.balanceOf(accounts[3])
     })
     .then(function(balance){
@@ -88,17 +89,30 @@ contract('FX2_Externsion_POS_IMPL', function (accounts) {
       return POS_IMPL_Instance.GetCurrentPosSum.call();
     })
     .then(function(totalSum){
-      assert.equal( totalSum.toString(), "150000000000000000", "Test GetPosRecordLists Faild." );
-      return POS_IMPL_Instance.RescissionPosAt.call(0, {form:accounts[4]})
+      assert.equal( totalSum.toString(), "130000000000000000", "Test GetPosRecordLists Faild." );
+    })
+  })
+  */
+
+  it("Test [DespoitToPos,]", function(){
+
+    return FX2_POS_IMPL.deployed().then(function(instance) {
+      POS_IMPL_Instance = instance
+      return POS_IMPL_Instance.DespoitToPos.call("150000000000000000")
     })
     .then(function(response){
-      assert.equal(response.amount.toString(), "5000000000000000", "Test RescissionPosAt Faild : amount retured err");
-      assert.equal(response.posProfit.toString(), "0", "Test RescissionPosAt 0 Faild : posProfit retured err.");
-      return POS_IMPL_Instance.GetCurrentPosSum.call();
+      assert.equal(response, true, "Test DespoitToPos Faild.")
+      return POS_IMPL_Instance.GetPosRecordLists();
     })
-    .then(function(totalSum){
-      assert.equal( totalSum.toString(), "140000000000000000", "Test GetPosRecordLists Faild." );
+    .then(function(response){
+      console.log(response);
+      return POS_IMPL_Instance.RescissionPosAt.call(0)
     })
+    .then(function(response){
+      assert.equal( response.posProfit.toString(), "0", "Test RescissionPosAt Faild : posProfit returned error.")
+      assert.equal( response.amount.toBeLessThan(), "150000000000000000", "Test RescissionPosAt Faild : amount returned error.")
+    })
+
   })
 
   // it("Test [RescissionPosAt, RescissionPosAll, GetPosRecordLists, balanceOf]", function() {

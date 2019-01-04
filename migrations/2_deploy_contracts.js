@@ -47,13 +47,18 @@ module.exports = function (deployer)
   // 添加模块之间的权限连接
   .then(function(instance){
     POS_IMPL_Instance = instance;
-    return ModulesManager_Token_Instance.AddExternsionModule( POS_IMPL_Instance.address ).catch(function(err){
-      console.log("   > ⚠️ AddExternsionModule Faild.");
+    return ModulesManager_Token_Instance.AddExternsionModule( ERC20Token_IMPL_Instance.address ).catch(function(err){
+      console.log("   > ⚠️  AddExternsionModule Faild.");
     })
   })
   .then(function(){
-    return ModulesManager_Token_Instance.AddExternsionModule( ERC20Token_IMPL_Instance.address ).catch(function(err){
-      console.log("   > ⚠️ AddExternsionModule Faild.");
+    return ModulesManager_Token_Instance.AddExternsionModule( POS_DBS_Instance.address ).catch(function(err){
+      console.log("   > ⚠️  AddExternsionModule Faild.");
+    })
+  })
+  .then(function(){
+    return ModulesManager_Token_Instance.AddExternsionModule( POS_IMPL_Instance.address ).catch(function(err){
+      console.log("   > ⚠️  AddExternsionModule Faild.");
     })
   })
   .then(function(){
@@ -61,12 +66,12 @@ module.exports = function (deployer)
   })
   .then(function(response){
 
-    if ( response[1].length !== 2 ) {
-      console.log("   > ⚠️ AllExtensionModuleHashNames Response Error.");
+    if ( response[1].length !== 3 ) {
+      console.log("   > ⚠️  AllExtensionModuleHashNames Response Error.");
     }
     else {
       return ModulesManager_POS_Instance.AddExternsionModule( POS_IMPL_Instance.address ).catch( function( err ){
-        console.log("   > ⚠️ AddExternsionModule Faild.");
+        console.log("   > ⚠️  AddExternsionModule Faild.");
         })
     }
 
@@ -76,7 +81,7 @@ module.exports = function (deployer)
   })
   .then(function(response) {
     if ( response[1].length !== 1 ) {
-      console.log("   > ⚠️ AllExtensionModuleHashNames Response Error.");
+      console.log("   > ⚠️  AllExtensionModuleHashNames Response Error.");
     }
   })
 }
