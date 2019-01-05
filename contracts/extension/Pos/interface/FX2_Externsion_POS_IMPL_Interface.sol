@@ -21,7 +21,7 @@ interface FX2_Externsion_POS_IMPL_Interface
   /// @param  posRecordIndex      : 解约的Pos记录记录号
   /// @return posProfit           : 获得的收益
   /// @return amount              : 提取的本金
-  function RescissionPosAt(uint posRecordIndex) external returns ( uint256 posProfit, uint256 amount );
+  function RescissionPosAt( uint posRecordIndex ) external returns ( uint256 posProfit, uint256 amount );
 
 
   /// @notice 一次性提取所有Pos参与记录的本金和收益,解除合约,本金与收益一并提出
@@ -43,11 +43,13 @@ interface FX2_Externsion_POS_IMPL_Interface
   /// @return posoutTimes         : 计算产出的时间
   function GetPosoutLists() external view returns ( uint  len, uint256[] memory posTotals, uint256[] memory posDecimals, uint256[] memory posEverCoinAmounts, uint256[] memory posoutTimes );
 
+
   /// @notice 提取参与Pos的收益，不提取本金
   /// @param  posRecordIndex      : 参与pos的记录号
   /// @return posProfit           : 成功提取的收益数量
   /// @return posAmount           : 对应的记录的本金
   function WithDrawPosProfit(uint posRecordIndex) external returns (uint256 profit, uint256 posAmount);
+
 
   /// @notice 提取所有参与Pos的记录的收益，不提取本金
   /// @return profitSum           : 成功提取的收益总和

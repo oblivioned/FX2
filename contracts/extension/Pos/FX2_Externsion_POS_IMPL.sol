@@ -278,6 +278,6 @@ FX2_Externsion_POS_Events
   uint256 readOnlyTokenDecimals;
 
   /////////////////// FX2Framework infomation //////////////////
-  string    public FX2_ModulesName = "FX2.Extension.Pos.IMPL";
+  string  public FX2_ModulesName = "FX2.Extension.Pos.IMPL";
 
 }

@@ -37,7 +37,7 @@ FX2_Externsion_POS_Events
         _uintHashMap["EverDayPosTokenAmount"] = 900000;
         _uintHashMap["MaxRemeberPosRecord"] = 30;
         _uintHashMap["JoinPosMinAmount"] = 10000000000;
-        _uintHashMap["WithDrawPosProfitEnable"] = 0;
+        _uintHashMap["WithDrawPosProfitEnable"] = 1;
     }
 
     /// @notice add instance of pos record into the database object;
@@ -297,7 +297,6 @@ FX2_Externsion_POS_Events
     NeedAdminPermission
     returns (bool success)
     {
-
         (
         uint len,
         ,
@@ -389,7 +388,6 @@ FX2_Externsion_POS_Events
     DB _db;
 
     /////////////////// FX2Framework infomation //////////////////
-    string    public FX2_ContractVer = "0.0.1 Release 2018-12-30";
     string    public FX2_ModulesName = "FX2.Extension.Pos.DBS";
-    string    public FX2_ExtensionID = "Pos";
+
 }

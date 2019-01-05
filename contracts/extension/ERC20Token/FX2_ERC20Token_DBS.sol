@@ -11,10 +11,13 @@
 pragma solidity >=0.5.0 <0.6.0;
 
 import "./interface/FX2_ERC20TokenDBS_Interface.sol";
+import "../../base/delegate/FX2_Modules_Migrate_Delegate.sol";
 
 /// @title  BalanceDBS
 /// @author Martin.Ren
-contract FX2_ERC20Token_DBS is FX2_ERC20TokenDBS_Interface
+contract FX2_ERC20Token_DBS is
+FX2_ERC20TokenDBS_Interface,
+FX2_Modules_Migrate_Delegate
 {
   constructor( FX2_PermissionCtl_Interface fx2_pcimpl, FX2_ModulesManager_Interface fx2_mmimpl )
   public
@@ -152,5 +155,5 @@ contract FX2_ERC20Token_DBS is FX2_ERC20TokenDBS_Interface
   mapping ( address => mapping ( bytes32 => uint256 ) ) _investmentAmountMap;
 
   /////////////////// FX2Framework infomation //////////////////
-  string    public FX2_ModulesName = "FX2.Extension.ERC20Token.DBS";
+  string public FX2_ModulesName = "FX2.Extension.ERC20Token.DBS";
 }
