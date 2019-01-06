@@ -37,7 +37,7 @@ FX2_Externsion_POS_Events
         _uintHashMap["EverDayPosTokenAmount"] = 900000;
         _uintHashMap["MaxRemeberPosRecord"] = 30;
         _uintHashMap["JoinPosMinAmount"] = 10000000000;
-        _uintHashMap["WithDrawPosProfitEnable"] = 1;
+        _uintHashMap["WithDrawPosProfitEnable"] = 0;
     }
 
     /// @notice add instance of pos record into the database object;
@@ -60,13 +60,13 @@ FX2_Externsion_POS_Events
     ValidModuleAPI
     returns (bool success)
     {
-      if ( _rIndex < _db.dbs_pos[_owner].length )
-      {
-        _db.dbs_pos[_owner][_rIndex].lastWithDrawTime = newValue;
-        return true;
-      }
+        if ( _rIndex < _db.dbs_pos[_owner].length )
+        {
+            _db.dbs_pos[_owner][_rIndex].lastWithDrawTime = newValue;
+            return true;
+          }
 
-      return false;
+          return false;
     }
 
     /// @notice Get a pos record by record index.
@@ -123,7 +123,7 @@ FX2_Externsion_POS_Events
       uint256[] memory _depositTimes,
       uint256[] memory _lastWithDrawTimes
       )
-      {
+    {
         len = _db.dbs_pos[_owner].length;
 
         _amounts = new uint256[](len);
@@ -132,9 +132,9 @@ FX2_Externsion_POS_Events
 
         for (uint i = 0; i < len; i++)
         {
-          _amounts[i] = _db.dbs_pos[_owner][i].amount;
-          _depositTimes[i] = ( _db.dbs_pos[_owner][i].depositTime );
-          _lastWithDrawTimes[i] = ( _db.dbs_pos[_owner][i].lastWithDrawTime );
+            _amounts[i] = _db.dbs_pos[_owner][i].amount;
+            _depositTimes[i] = ( _db.dbs_pos[_owner][i].depositTime );
+            _lastWithDrawTimes[i] = ( _db.dbs_pos[_owner][i].lastWithDrawTime );
         }
     }
 
@@ -143,7 +143,7 @@ FX2_Externsion_POS_Events
     view
     returns (uint256 totalSum)
     {
-      return _db.posAmountTotalSum;
+        return _db.posAmountTotalSum;
     }
 
     /// @notice Get a target owner address deposit pos pool total amount.
@@ -181,7 +181,7 @@ FX2_Externsion_POS_Events
     view
     returns (uint16 size)
     {
-      return _db.posOutRecordMaxSize;
+        return _db.posOutRecordMaxSize;
     }
 
 
@@ -197,22 +197,22 @@ FX2_Externsion_POS_Events
     ValidModuleAPI
     returns (bool success)
     {
-      if ( _db.dbs_out.length >= _db.posOutRecordMaxSize )
-      {
-        for (uint i = 0; i < _db.dbs_out.length - 1; i++)
+        if ( _db.dbs_out.length >= _db.posOutRecordMaxSize )
         {
-          _db.dbs_out[i] = _db.dbs_out[i + 1];
+            for (uint i = 0; i < _db.dbs_out.length - 1; i++)
+            {
+                _db.dbs_out[i] = _db.dbs_out[i + 1];
+            }
+
+            delete _db.dbs_out[ _db.dbs_out.length - 1 ];
+            _db.dbs_out.length --;
+
         }
 
-        delete _db.dbs_out[ _db.dbs_out.length - 1 ];
-        _db.dbs_out.length --;
+        PosoutRecord memory _record = CreateNewPosoutRecord( _posTotal, _posDecimal, _posEverCoinAmount, _posoutTime );
+        _db.dbs_out.push(_record);
 
-      }
-
-      PosoutRecord memory _record = CreateNewPosoutRecord( _posTotal, _posDecimal, _posEverCoinAmount, _posoutTime );
-      _db.dbs_out.push(_record);
-
-      return true;
+        return true;
     }
 
     /// @notice Get a posout record detail info by index.
@@ -368,10 +368,10 @@ FX2_Externsion_POS_Events
 
     struct PosoutRecord
     {
-      uint256 posTotal;
-      uint256 posDecimal;
-      uint256 posEverCoinAmount;
-      uint256 posoutTime;
+        uint256 posTotal;
+        uint256 posDecimal;
+        uint256 posEverCoinAmount;
+        uint256 posoutTime;
     }
 
     struct DB

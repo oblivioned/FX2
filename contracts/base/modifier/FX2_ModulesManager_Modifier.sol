@@ -24,32 +24,10 @@ contract FX2_ModulesManager_Modifier
 
     modifier ValidModuleAPI()
     {
-      require ( FX2_MMImpl.IsExistContractVisiter(msg.sender) );
-      _;
-    }
-
-    /// @notice 此函数修改器可以增加在任何支持FX2_PermissionInterface的合约函数内，配合
-    ///         提供的断言函数，切换合约状态，该修改器定义为，情况比state更加好转的情况下可
-    ///         以执行例如，BetterThanExecuted(DBSContractState.Sicking)那么在合约
-    ///         状态为Sicking和Healthy时候可以执行。
-    /// @param  _betterThanState  : 最差可以继续执行的状态
-    modifier BetterThanExecuted( FX2_ModulesManager_Interface.ModulesState _betterThanState )
-    {
-      if ( _betterThanState == FX2_ModulesManager_Interface.ModulesState.AnyTimes )
-      {
+        require (
+            ( FX2_MMImpl.State() == FX2_ModulesManager_Interface.ModulesState.Healthy && FX2_MMImpl.IsExistContractVisiter(msg.sender) ) ||
+            FX2_MMImpl.IsDoctorProgrammer(msg.sender)
+            );
         _;
-        return ;
-      }
-
-      if ( FX2_MMImpl.IsDoctorProgrammer(msg.sender) )
-      {
-        _;
-        return ;
-      }
-
-      require( FX2_MMImpl.State() != FX2_ModulesManager_Interface.ModulesState.Disable, "The contract is being Disable.");
-      require( FX2_MMImpl.State() != FX2_ModulesManager_Interface.ModulesState.Migrated, "The contract has been discarded and moved to the new contract.");
-      require( FX2_MMImpl.State() <= _betterThanState, "Failure of health examination." );
-      _;
     }
 }

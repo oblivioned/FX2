@@ -14,5 +14,5 @@ pragma solidity >=0.5.0 <0.6.0;
 /// @author Martin.Ren
 interface FX2_Modules_Migrate_Delegate
 {
-  function DoMigrateWorking( address originModules, address newImplAddress ) external returns (bool success);
+    function DoMigrateWorking( address originModules, address newImplAddress ) external returns (bool success);
 }
