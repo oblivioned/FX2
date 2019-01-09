@@ -138,10 +138,11 @@ FX2_Externsion_POS_Events
             }
         }
 
-        emit OnRescissionPosRecord(
+        emit OnWithdrawalPosProfix(
             amount,
             posProfit,
-            DBS_Pos.GetBoolValue("WithDrawPosProfitEnable")
+            DBS_Pos.GetBoolValue("WithDrawPosProfitEnable"),
+            true
             );
     }
 
@@ -177,9 +178,11 @@ FX2_Externsion_POS_Events
 
         if ( amountTotalSum > 0 )
         {
-            emit OnRescissionPosRecordAll(
-                amountTotalSum, profitTotalSum,
-                DBS_Pos.GetBoolValue("WithDrawPosProfitEnable")
+            emit OnWithdrawalPosProfixAll(
+                amountTotalSum,
+                profitTotalSum,
+                DBS_Pos.GetBoolValue("WithDrawPosProfitEnable"),
+                true
                 );
         }
 
@@ -216,8 +219,6 @@ FX2_Externsion_POS_Events
     {
         uint256 distantPosoutTime;
 
-        (, uint256 _depositTime, ) = DBS_Pos.GetPosRecord( msg.sender, posRecordIndex );
-
         (profit, posAmount, distantPosoutTime) = getPosRecordProfit(msg.sender, posRecordIndex);
 
         require( profit > 0, "not anymore profit in the pos pool in this time." );
@@ -228,12 +229,11 @@ FX2_Externsion_POS_Events
             DBS_Token.TransferBalanceFromContract(msg.sender, profit);
         }
 
-        emit OnWithdrawPosRecordPofit(
+        emit OnWithdrawalPosProfix(
             posAmount,
-            _depositTime,
-            distantPosoutTime,
             profit,
-            DBS_Pos.GetBoolValue("WithDrawPosProfitEnable")
+            DBS_Pos.GetBoolValue("WithDrawPosProfitEnable"),
+            false
             );
     }
 
@@ -262,10 +262,11 @@ FX2_Externsion_POS_Events
             profitSum += posProfit;
             posAmountSum += amount;
 
-            emit OnWithdrawPosRecordPofitAll(
+            emit OnWithdrawalPosProfix(
                 posAmountSum,
                 profitSum,
-                DBS_Pos.GetBoolValue("WithDrawPosProfitEnable")
+                DBS_Pos.GetBoolValue("WithDrawPosProfitEnable"),
+                false
                 );
         }
     }

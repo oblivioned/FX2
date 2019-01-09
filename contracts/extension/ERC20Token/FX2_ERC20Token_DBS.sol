@@ -137,7 +137,7 @@ FX2_Modules_Migrate_Delegate
         _balanceMap[_to] += _amount;
         _allowanceMap[_from][_owner] -= _amount;
     }
-    
+
 
     /// @notice 实现合约迁移方法，在ERC20TokenDBS合约中，如果需要迁移子模块应该注意原合约地址下剩余的数量的转移问题,注意 ThisContractOnly 函数修改器的实现，由于迁移工作是合约自己调用了自己，为了防止外界调用而增加的限制
     /// @param  originModules     :原模块地址，注意此地址必须是已经成功添加在DBS子模块中的模块。否则交易会失败
