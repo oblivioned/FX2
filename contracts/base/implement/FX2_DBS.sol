@@ -140,53 +140,52 @@ library FX2_Schema {
     returns ( QueryResponse memory response )
     {
         ( uint offset, uint len ) = GetFieldOffset( _fromTable.dom, _whereField );
-        
+
         if ( len == 0 )
         {
             return QueryResponse( 0xE0, "ERROR(0xE0):WhereField Notfound.", 0, new bytes[](0) );
         }
-        
+
         bytes32[] memory rawDataMemPoints = new bytes32[](8);
-        
+
         for ( uint i = 0; i < _fromTable.records.length; i++ )
         {
             bytes memory rawData = _fromTable.records[i];
-            
+
             bytes memory fieldValue;
-            
+
             assembly {
-                
+
                 function $allocate(size) -> pos {
                     pos := mload(0x40)
                     mstore(0x40, add(pos, size))
                 }
-                
+
                 function $bsc( source, offset, size ) -> dist {
-                    
+
                     dist := $allocate( add(size, 32) )
                     mstore( dist, size )
-                    
+
+                    if or ( gt (size, sub( mload(source), offset )), gt (offset, mload(source)) ){
+                        return(0,0)
+                    }
+
                     if or ( eq( size, 32 ), lt( size, 32) ) {
                         mstore( add(dist, 32), and( mload( add(source, add(32, offset))), not(exp(2, sub(32, size))) ))
                     }
-                    
-                    if gt( size, 32 ) {
-                        for {let i := 0}
-                            lt(i, size)
-                            {mstore(i, add(i, 32))}
-                        {
-                            mstore( add(dist, add(32,i)), mload(add(source, add(32, i))) )
+
+                    if gt ( size, 32 ) {
+                        for { let i := 0 } lt( i, size ) { i := add( i, 32 ) } {
+                            mstore( add(dist, add(32, i)), mload(add(source, add(32, add(i, offset)))) )
                         }
-                        
-                        mstore( add(dist, mload(dist)), and(mload(add(source, mload(source))), not(exp(2, sub(32,size)))) )
                     }
                 }
-                
+
                 function $bseq( a, b ) -> iseq {
-                    
+
                     switch or ( lt( mload(a), 32 ), eq( mload(b), 32 ) )
                     case 1 {
-                        if and( 
+                        if and(
                             eq( mload(a), mload(b)),
                             eq( mload( add(a, 32) ), mload( add(b, 32)))
                             )
@@ -194,11 +193,11 @@ library FX2_Schema {
                             iseq := 1
                         }
                     }
-                    
+
                     case 0 {
-                        
+
                         iseq := eq( mload(a), mload(b) )
-                        
+
                         if mload(iseq) {
                             for {let i := 0}
                                 lt( i, mload(a) )
@@ -206,24 +205,24 @@ library FX2_Schema {
                             {
                                 iseq := and( mload(iseq), eq( mload( add(add( a, 32 ), i)), mload(add(add( b, 32 ), i))))
                             }
-                            
+
                             if mload(iseq) {
                                 iseq := and( mload(iseq), eq( mload(add(a, mload(a))), mload(add(b,mload(b)))))
                             }
                         }
                     }
                 }
-                
-                
+
+
                 fieldValue := mload(0x40)
                 mstore( 0x40, add( fieldValue, mload( len ) ) )
-                
+
                 mstore( fieldValue, mload(len) )
-                
+
                 mstore( add(fieldValue, 32), mload( add( rawData, add( 32, mload( offset ) ))))
-                
-                fieldValue := div( mload( add(fieldValue, 32 ) ), exp(2, sub( 256, mul(mload(len), 8) ) )) 
-                
+
+                fieldValue := div( mload( add(fieldValue, 32 ) ), exp(2, sub( 256, mul(mload(len), 8) ) ))
+
                 // if eq( mload(fieldValue), mload(_equalValue) ){
                 //     mstore( datas, add(mload(_datas), 1 ) )
                 // }
