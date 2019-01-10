@@ -1,13 +1,10 @@
 pragma solidity >=0.5.0 <0.6.0;
 
 import "truffle/Assert.sol";
-
 import "../../contracts/base/library/FX2_Library_Bytes.sol";
 
 contract TestFX2_Library_Bytes is FX2_Library_Bytes
 {
-    /* event OnTestTestSuccess( bytes source, bytes dist ); */
-
     function test_bytescmp() public {
 
         // Case 1 : 空bytes匹配测试

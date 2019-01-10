@@ -7,7 +7,7 @@ contract FX2_Library_Bytes
     /// @param _begin : 起始检索
     /// @param _rplcontent : 替换串
     /// @return _success : 调用结果
-    function bytesrpl( bytes memory _source, uint _begin, bytes memory _rplcontent ) internal pure returns ( bool _success ) {
+    function bytesset( bytes memory _source, uint _begin, bytes memory _rplcontent ) internal pure returns ( bool _success ) {
 
         assembly {
 
@@ -25,13 +25,13 @@ contract FX2_Library_Bytes
                 }
                 case 1 {
                     // 本次写入一定小于32个字节，需要拼合数据
-                    // 1.讲源串需要替换的位置的数据均设置为0
-                    mstore( add( _source, add( 32, i) ), and( mload( add( _source, add( 32, i) ) ), exp( 8, sub( 32, mod( mload( _rplcontent ), 32 ) ) ) ) )
+                    // 1.将源串需要替换的位置的数据均设置为0
+                    mstore( add( _source, add( 32, i ) ), and( mload( add( _source, add( 32, i) ) ), sub ( exp( 2, mul( 8, sub( 32, mod( mload( _rplcontent ), 32 ) ) ) ), 1 ) ) )
                     // 2.由于_rplcontent最后的不足32个字节的数据存在不可预料的地位数据，需要清空低位数据后在与源串进行or拼合，此处建立一个容纳后不足32字节的副本进行操作
                     let copy := mload(0x40)
                     mstore( 0x40, add( copy, 32 ) )
                     // 3.取出最后32字节数据,取出的结果在低位,需要移动到高位对其，实际就是左移，右端补0
-                    mstore( copy, mul( mload( add( _rplcontent, mload( _rplcontent ) ) ), exp( 8, sub( 32, mod( mload( _rplcontent ), 32 ) ) ) ) )
+                    mstore( copy, mul( mload( add( _rplcontent, mload( _rplcontent ) ) ), exp( 2, mul( 8, sub( 32, mod( mload( _rplcontent ), 32 ) ) ) ) ) )
                     // 4.数据合并
                     mstore( add( _source, add( 32, i ) ), or( mload( add( _source, add( 32, i ) ) ), mload(copy) ) )
                 }
@@ -39,7 +39,6 @@ contract FX2_Library_Bytes
 
             _success := 1
         }
-
     }
 
     /// @notice 拷贝方法,在内存中拷贝一个源串的备份，会返回新串
@@ -89,34 +88,12 @@ contract FX2_Library_Bytes
     /// @param _bytes1 : 拼接结果中的高位字串
     /// @param _bytes1 : 拼接结果中的低位字串
     /// @return _new : 新的字串内存实例
-    function bytescat( bytes memory _bytes1, bytes memory _bytes2 ) internal pure returns ( bytes memory _new )
+    function bytesCAT( bytes memory _bytes1, bytes memory _bytes2 ) internal pure returns ( bytes memory _new )
     {
-        assembly {
+        _new = new bytes( _bytes1.length + _bytes2.length );
 
-            let len := add ( add( mload( _bytes1 ), mload( _bytes2 ) ), 32 )
-            _new := mload( 0x40 )
-            mstore( 0x40, add( _new, len ) )
-            mstore( _new, len )
-
-            for { let i:= 0 } lt ( i, mload( _bytes1 ) ) { i := add(i , 32) }
-            {
-                mstore( add( _new, add( 32, i) ), mload(add( _bytes1, add( 32 , i ) ) ) )
-            }
-
-            for { let i:= mload( _bytes1 ) } lt ( i, len ) { i := add(i , 32) }
-            {
-                mstore( add( _new, add( 32, i) ), mload(add( _bytes2, add( 32 , i ) ) ) )
-            }
-        }
-    }
-
-    /// @notice 获取字串长度，推荐直接使用bytes.length而不是在此获取，此处仅提供一个额外的写法，而实际功能与前者无差别
-    /// @return _len : 长度
-    function byteslen( bytes memory _source ) internal pure returns ( uint _len )
-    {
-        assembly {
-            _len := mload( _source )
-        }
+        bytesset( _new, 0, _bytes1 );
+        bytesset( _new, _bytes1.length, _bytes2);
     }
 
     /// @notice 字串匹配，匹配两个字串是否相等，由于一次匹配32个字节，所以相比hash值匹配方式和循环遍历方式而言此方法效率较高特别是在串长超过32个字节时，由于是按照字节匹配，若用在匹配字符串中时候，会严格区分大小写
@@ -213,8 +190,21 @@ contract FX2_Library_Bytes
                     }
                 }
             }
+        }
+    }
+
+    /* struct BytesBuffer
+    {
+        bytes16 _prev;
+        bytes32 _data;
+        bytes16 _next;
+    }
+
+    function write( BytesBuffer memory _buff, bytes memory _data )
+    {
+        assembly {
 
         }
+    } */
 
-    }
 }
