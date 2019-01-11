@@ -49,7 +49,7 @@ contract TestFX2_Library_Bytes is FX2_Library_Bytes
 
     }
 
-    function test_bytesrpl() public {
+    function test_bytesset() public {
 
         //////////////////////////////////////////////////////////////////////////////////////////////////
         // Case 1-6 测试32字节以内的替换结果，主要测试在不能进行32字节对其时候，函数是否可以正常结算结果
@@ -58,21 +58,20 @@ contract TestFX2_Library_Bytes is FX2_Library_Bytes
 
 
         // Case 1-2 全部替换后匹配结果
-        Assert.equal( bytesrpl( textBytes, 0, bytes("THIS IS A TEST STRINGS.") ), true, 'Case 1 Faild');
+        Assert.equal( bytesset( textBytes, 0, bytes("THIS IS A TEST STRINGS.") ), true, 'Case 1 Faild');
         /* Assert.equal( bytescmp( textBytes, bytes("THIS IS A TEST STRINGS.") ), true, 'Case 2 Faild' ); */
         Assert.equal( bytescmp( textBytes, bytes("THIS IS A TEST STRINGS.") ), true, string(textBytes) );
 
         // Case 3-4 替换前4位后匹配结果
-        Assert.equal( bytesrpl( textBytes, 0, bytes("FFFF") ), true, 'Case 3 Faild');
-        /* Assert.equal( bytescmp( textBytes, bytes("FFFF IS A TEST STRINGS.") ), true, 'Case 4 Faild' ); */
-        Assert.equal( bytescmp( textBytes, bytes("FFFF IS A TEST STRINGS.") ), true, string(textBytes) );
+        Assert.equal( bytesset( textBytes, 0, bytes("FFFF") ), true, 'Case 3 Faild');
+        Assert.equal( bytescmp( textBytes, bytes("FFFF IS A TEST STRINGS.") ), true, 'Case 4 Faild' );
 
         // Case 5-6 替换中间的TEST后匹配结果
-        Assert.equal( bytesrpl( textBytes, 11, bytes("AAAA") ), true, 'Case 5 Faild');
+        Assert.equal( bytesset( textBytes, 10, bytes("AAAA") ), true, 'Case 5 Faild');
         Assert.equal( bytescmp( textBytes, bytes("FFFF IS A AAAA STRINGS.") ), true, 'Case 6 Faild' );
 
         // Case 6-7 越界替换应该正常返回替换失败,并且源串不应该改变
-        Assert.equal( bytesrpl( textBytes, 0, bytes("This is a test strings.out of arr") ), false, 'Case 7 Faild');
+        Assert.equal( bytesset( textBytes, 0, bytes("This is a test strings.out of arr") ), false, 'Case 7 Faild');
         Assert.equal( bytescmp( textBytes, bytes("FFFF IS A AAAA STRINGS.") ), true, 'Case 8 Faild' );
 
 
@@ -82,15 +81,15 @@ contract TestFX2_Library_Bytes is FX2_Library_Bytes
         textBytes = bytes(text40);
 
         // Case 9-10 40字节全部替换后匹配结果
-        Assert.equal( bytesrpl( textBytes, 0, bytes("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB") ), true, 'Case 9 Faild');
+        Assert.equal( bytesset( textBytes, 0, bytes("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB") ), true, 'Case 9 Faild');
         Assert.equal( bytescmp( textBytes, bytes("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB") ), true, 'Case 10 Faild' );
 
         // Case 11-12 40字节中替换10-30个字节后匹配结果
-        Assert.equal( bytesrpl( textBytes, 10, bytes("FFFFFFFFFFFFFFFFFFFF") ), true, 'Case 11 Faild');
+        Assert.equal( bytesset( textBytes, 10, bytes("FFFFFFFFFFFFFFFFFFFF") ), true, 'Case 11 Faild');
         Assert.equal( bytescmp( textBytes, bytes("BBBBBBBBBBFFFFFFFFFFFFFFFFFFFFBBBBBBBBBB") ), true, 'Case 12 Faild' );
 
         // Case 13-14 越界替换
-        Assert.equal( bytesrpl( textBytes, 30, bytes("FFFFFFFFFFFFFFFFFFFF") ), false, 'Case 13 Faild');
+        Assert.equal( bytesset( textBytes, 30, bytes("FFFFFFFFFFFFFFFFFFFF") ), false, 'Case 13 Faild');
         Assert.equal( bytescmp( textBytes, bytes("BBBBBBBBBBFFFFFFFFFFFFFFFFFFFFBBBBBBBBBB") ), true, 'Case 12 Faild' );
 
 
@@ -100,15 +99,15 @@ contract TestFX2_Library_Bytes is FX2_Library_Bytes
         textBytes = bytes(text64);
 
         // Case 15-16 40字节全部替换后匹配结果
-        Assert.equal( bytesrpl( textBytes, 0, bytes("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") ), true, 'Case 15 Faild');
+        Assert.equal( bytesset( textBytes, 0, bytes("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") ), true, 'Case 15 Faild');
         Assert.equal( bytescmp( textBytes, bytes("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") ), true, 'Case 16 Faild' );
 
         // Case 17-18 40字节中替换10-30个字节后匹配结果
-        Assert.equal( bytesrpl( textBytes, 16, bytes("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF") ), true, 'Case 17 Faild');
+        Assert.equal( bytesset( textBytes, 16, bytes("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF") ), true, 'Case 17 Faild');
         Assert.equal( bytescmp( textBytes, bytes("AAAAAAAAAAAAAAAAFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAAAAAAAAAAAAAAAA") ), true, 'Case 18 Faild' );
 
         // Case 19-20 越界替换
-        Assert.equal( bytesrpl( textBytes, 33, bytes("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF") ), false, 'Case 19 Faild');
+        Assert.equal( bytesset( textBytes, 33, bytes("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF") ), false, 'Case 19 Faild');
         Assert.equal( bytescmp( textBytes, bytes("AAAAAAAAAAAAAAAAFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAAAAAAAAAAAAAAAA") ), true, 'Case 20 Faild' );
     }
 }
